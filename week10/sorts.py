@@ -112,12 +112,11 @@ def selection_sort(arr: list[Any]) -> list[Any]:
     return new_arr
 
 
-def quick_sort(arr: list[Any], low: int, high: int) -> None:
+def jerry_sort(arr: list[Any], low: int, high: int) -> None:
     """
-    Purpose: Sorts a section of a list (part of Quick sort algrothrim)
+    Purpose: Sorts a section of a list (based on Jerry's incorrect yet working interpertation of the Quick sort algrothrim)
     Parameters: arr the list to be sorted, low the left bound of the section, high the right bound
     Return val: None (it modifies the input list)
-    Note: hits maximum recursion depth fairly quickly
     """
     split = low
     if low < high:
@@ -126,18 +125,19 @@ def quick_sort(arr: list[Any], low: int, high: int) -> None:
                 arr[low], arr[i] = arr[i], arr[low]
 
         arr[low], arr[split] = arr[split], arr[low]
-        quick_sort(arr, low, split - 1)
-        quick_sort(arr, split + 1, high)
+        jerry_sort(arr, low, split - 1)
+        jerry_sort(arr, split + 1, high)
 
 
-def quick_sort_full(arr: list[Any]) -> list[Any]:
+def jerry_sort_full(arr: list[Any]) -> list[Any]:
     """
-    Purpose: Sorts a list (using the Quick sort algrothrim)
+    Purpose: Sorts a list (using the Jerry's incorrect yet working interpertation of the QUick sort algrothrim)
     Parameters: arr (list) the list to be sorted
     Return val: A copy of the sorted list
+    Note: hits maximum recursion depth fairly quickly
     """
     new_arr = copy_list(arr)
-    quick_sort(new_arr, 0, len(new_arr) - 1)
+    jerry_sort(new_arr, 0, len(new_arr) - 1)
     return new_arr
 
 
@@ -180,10 +180,12 @@ def time_sorts(arr_len: int, sorts: list) -> list[float]:
 
 if __name__ == "__main__":
 
-    arr_len = 1000
+    arr_len = 10000
 
     sorts = [my_sort, bubble_sort, insertion_sort, selection_sort]
+    sort_names = ["My sort", "Bubble sort", "Insertion sort", "Selection sort"]
     times = time_sorts(arr_len, sorts)
 
+    print("Array length: %i" % arr_len)
     for i in range(len(sorts)):
-        print("%s time: %.2f" % (str(sorts[i]), times[i]))
+        print("%s time:\t%.2f seconds" % (sort_names[i], times[i]))
