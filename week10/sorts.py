@@ -87,7 +87,7 @@ def insertion_sort(arr: list[Any]) -> list[Any]:
     return new_arr
 
 
-def selection_sort(arr: list[Any]) -> list[Any]:
+def selection_sort(arr: list[Any], key = lambda x: x, reverse: bool = False) -> list[Any]:
     """
     This is the selection sort algorithm:
         - given a list L
@@ -106,9 +106,11 @@ def selection_sort(arr: list[Any]) -> list[Any]:
     for i in range(len(new_arr) - 1):
         lowest_idx = len(new_arr) - 1
         for j in range(i, len(new_arr) - 1):
-            if new_arr[j] < new_arr[lowest_idx]:
+            if key(new_arr[j]) < key(new_arr[lowest_idx]):
                 lowest_idx = j
         new_arr[lowest_idx], new_arr[i] = new_arr[i], new_arr[lowest_idx]
+    if reverse:
+        new_arr = list(reversed(new_arr))
     return new_arr
 
 
