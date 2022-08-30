@@ -150,42 +150,53 @@ def python_sort(arr: list[Any]) -> list[Any]:
     return sorted(arr)
 
 
-def time_sorts(arr_len: int, sorts: list) -> list[float]:
+def time_sorts(base_arr_len: int, doubles: int, sorts: list) -> list[list[float]]:
     """
     Purpose: Time a sorting function/implementation
-    Parameters: The length of the list to test (int), and a list of sorting functions to use
-    Return val: A list of the times it took for all the sorts to sort the same shuffled list (-1 if a sort did not work)
+    Parameters: The length of the list to test (int), how many times to time each sort
+        where each set, the length doubles(int), and a list of sorting functions to use
+    Return val: A list of the times it took for all the sorts to sort the same
+        shuffled list (-1 if a sort did not work)
     """
     import time  # for timing the sort
     import random  # for shuffle
 
-    starting_arr = make_list(arr_len)
+    times: list[list[float]] = []
 
-    shuffled_arr = copy_list(starting_arr)
-    random.shuffle(shuffled_arr)
+    for multiplier in range(0, doubles):
 
-    times: list[float] = []
+        starting_arr = make_list(base_arr_len * 2 ** multiplier)
 
-    for sort in sorts:
-        start_time = time.time()
-        sorted_arr = sort(shuffled_arr)
-        time_taken = time.time() - start_time
+        shuffled_arr = copy_list(starting_arr)
+        random.shuffle(shuffled_arr)
 
-        if sorted_arr != starting_arr:
-            times.append(-1)
-        times.append(time_taken)
+        times_for_len: list[float] = []
+
+        for sort in sorts:
+            start_time = time.time()
+            sorted_arr = sort(shuffled_arr)
+            time_taken = time.time() - start_time
+
+            if sorted_arr != starting_arr:
+                times_for_len.append(-1)
+            else:
+                times_for_len.append(time_taken)
+
+        times.append(times_for_len)
 
     return times
 
 
 if __name__ == "__main__":
 
-    arr_len = 10000
+    arr_len = 2000
+    doubles = 3
 
-    sorts = [my_sort, bubble_sort, insertion_sort, selection_sort]
-    sort_names = ["My sort", "Bubble sort", "Insertion sort", "Selection sort"]
-    times = time_sorts(arr_len, sorts)
+    sorts = [my_sort, bubble_sort, insertion_sort, selection_sort, python_sort]
+    sort_names = ["My sort", "Bubble sort", "Insertion sort", "Selection sort", "Python sort"]
+    times = time_sorts(arr_len, doubles, sorts)
 
-    print("Array length: %i" % arr_len)
-    for i in range(len(sorts)):
-        print("%s time:\t%.2f seconds" % (sort_names[i], times[i]))
+    for multiplier in range(0, doubles):
+        print("\nArray length: %i" % (arr_len * 2 ** multiplier))
+        for i in range(len(sorts)):
+            print("%15s time:\t%.3f seconds" % (sort_names[i], times[multiplier][i]))
