@@ -20,33 +20,25 @@ def get_stop_words(filename: str) -> list[str]:
     return words
 
 
-def get_movie_reviews(filename: str) -> list[list[Any]]:
-    lines = read_file(filename)
-    movie_reviews = []
+def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[list[Any]]:
+    lines = read_file(reviews_filename)
+    stop_words = get_stop_words(stop_words_filename)
+    word_scores: list[list[Any]] = []
     for line in lines:
         try:
             items = line.split()
             score = int(items[0])
-            movie_reviews.append([score, items[1:]])
+            for word in items[1:]:
+                word = word.lower()
+                if word.isalpha() and not word in stop_words:  # TODO: change in to binary
+                    idx = search_for_word(word_scores, word)
+                    if idx == -1:
+                        word_scores.append([word, score - 2])
+                    else:
+                        word_scores[idx][1] += score - 2
+
         except ValueError:
             print("Review skipped, incorrect format")
-    return movie_reviews
-
-
-def score_movie_reviews(
-    movie_reviews: list[list[Any]], stop_words: list[str]
-) -> list[list[Any]]:
-    word_scores = []
-    for review in movie_reviews:
-        for word in review[1]:
-            word = word.lower()
-            if word.isalpha() and not word in stop_words:  # TODO: change in to binary
-                idx = search_for_word(word_scores, word)
-                if idx == -1:
-                    word_scores.append([word, review[0] - 2])
-                else:
-                    word_scores[idx][1] += review[0] - 2
-
     word_scores.sort(key=lambda x: x[1], reverse=True)
     return word_scores
 
@@ -68,16 +60,14 @@ def display_word_scores(word_scores: list[list[Any]]) -> None:
         for word_score in word_scores:
             print_word_score(word_score)
     else:
-        print("Best 20 words:")
+        print("Top 20")
         for word_score in word_scores[:20]:
             print_word_score(word_score)
-        print("Worst 20 words:")
+        print("\nBottom 20")
         for word_score in word_scores[-20:]:
             print_word_score(word_score)
 
 
 if __name__ == "__main__":
-    stop_words = get_stop_words("stopwords.txt")
-    movie_reviews = get_movie_reviews("movieReviews.txt")
-    word_scores = score_movie_reviews(movie_reviews, stop_words)
+    word_scores = get_word_scores("movieReviews.txt", "stopwords.txt")
     display_word_scores(word_scores)
