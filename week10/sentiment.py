@@ -1,6 +1,23 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
+from sorts import selection_sort
+
+
+def binary_search(arr: list[Any], element: Any, key = lambda x: x):
+    low = 0
+    high = len(arr) - 1
+    mid = 0
+    while low <= high:
+        mid = (low + high) // 2
+        if key(arr[mid]) == element:
+            return mid
+        elif key(arr[mid]) > element:
+            high = mid - 1
+        else:
+            low = mid + 1
+    return -(mid + 1)
+
 
 def read_file(filename: str) -> list[str]:
     lines = []
@@ -22,7 +39,7 @@ def get_stop_words(filename: str) -> list[str]:
 
 def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[list[Any]]:
     lines = read_file(reviews_filename)
-    stop_words = get_stop_words(stop_words_filename)
+    stop_words = get_stop_words(stop_words_filename) # already sorted
     word_scores: list[list[Any]] = []
     for line in lines:
         try:
@@ -30,16 +47,19 @@ def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[lis
             score = int(items[0])
             for word in items[1:]:
                 word = word.lower()
-                if word.isalpha() and not word in stop_words:  # TODO: change in to binary
-                    idx = search_for_word(word_scores, word)
-                    if idx == -1:
+                if word.isalpha() and binary_search(stop_words, word) < 0:
+                    idx = binary_search(word_scores, word, lambda x: x[0])
+                    if idx < 0:
+                        # word_scores.insert(-(idx + 1), [word, score - 2])
                         word_scores.append([word, score - 2])
+                        word_scores = selection_sort(word_scores, key = lambda x: x[0])
                     else:
                         word_scores[idx][1] += score - 2
-
         except ValueError:
             print("Review skipped, incorrect format")
-    word_scores.sort(key=lambda x: x[1], reverse=True)
+    
+    # word_scores.sort(key=lambda x: x[1], reverse=True)
+    word_scores = selection_sort(word_scores, key = lambda x: x[1], reverse=True)
     return word_scores
 
 
