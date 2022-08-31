@@ -41,7 +41,9 @@ def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[lis
     lines = read_file(reviews_filename)
     stop_words = get_stop_words(stop_words_filename) # already sorted
     word_scores: list[list[Any]] = []
+    i = 0
     for line in lines:
+        i += 1
         try:
             items = line.split()
             score = int(items[0])
@@ -55,10 +57,10 @@ def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[lis
                         word_scores = selection_sort(word_scores, key = lambda x: x[0])
                     else:
                         word_scores[idx][1] += score - 2
+            print("%i/%i = %0.2f" % (i, len(lines), i/len(lines)))
         except ValueError:
             print("Review skipped, incorrect format")
     
-    # word_scores.sort(key=lambda x: x[1], reverse=True)
     word_scores = selection_sort(word_scores, key = lambda x: x[1], reverse=True)
     return word_scores
 
