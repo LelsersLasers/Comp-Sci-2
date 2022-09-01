@@ -63,7 +63,7 @@ def bubble_sort(arr: list[Any]) -> list[Any]:
     return new_arr
 
 
-def insertion_sort(arr: list[Any]) -> list[Any]:
+def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> list[Any]:
     """
     This is the insertion sort algorithm:
         - assume item at index 0 is already "sorted"
@@ -77,17 +77,19 @@ def insertion_sort(arr: list[Any]) -> list[Any]:
     Return val: A copy of the sorted list
     """
     new_arr = copy_list(arr)
-    for i in range(len(new_arr) - 1):
-        lowest_idx = len(new_arr) - 1
-        for j in range(i, len(new_arr) - 1):
-            if new_arr[j] < new_arr[lowest_idx]:
-                lowest_idx = j
-        lowest = new_arr.pop(lowest_idx)
-        new_arr.insert(i, lowest)
+    for i in range(1, len(new_arr)):
+        val = new_arr[i]
+        j = i - 1
+        while j >= 0 and key(val) < key(new_arr[j]):
+            new_arr[j + 1] = new_arr[j]
+            j -= 1
+        new_arr[j + 1] = val
+    if reverse:
+        return list(reversed(new_arr))
     return new_arr
 
 
-def selection_sort(arr: list[Any], key = lambda x: x, reverse: bool = False) -> list[Any]:
+def selection_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> list[Any]:
     """
     This is the selection sort algorithm:
         - given a list L
@@ -110,7 +112,7 @@ def selection_sort(arr: list[Any], key = lambda x: x, reverse: bool = False) -> 
                 lowest_idx = j
         new_arr[lowest_idx], new_arr[i] = new_arr[i], new_arr[lowest_idx]
     if reverse:
-        new_arr = list(reversed(new_arr))
+        return list(reversed(new_arr))
     return new_arr
 
 
