@@ -50,12 +50,12 @@ def run(win: pygame.surface.Surface, fps: int, arr_len: int) -> None:
                 bar_height = int(bar_height_ratio * arr[draw_i]) + 20
 
                 color = (255, 255, 255)
-                if draw_i == len(arr) - bubble_i - 1:
+                if draw_i > len(arr) - bubble_i - 1:
                     color = (0, 255, 0)
                 elif draw_i == bubble_j + offsets[0]:
                     color = (255, 0, 0)
-                elif draw_i == bubble_j + offsets[1]:
-                    color = (0, 0, 255)
+                # elif draw_i == bubble_j + offsets[1]:
+                #     color = (0, 0, 255)
 
                 rect = (int(draw_i * bar_width + 10), win.get_height() - bar_height, int(bar_width), bar_height)
                 pygame.draw.rect(win, color, rect)
