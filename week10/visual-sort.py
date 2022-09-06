@@ -1,14 +1,12 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
-import pygame
-
-
-"""
-TODO:
-- Indication that pygame is needed
-- Comments
-"""
+try:
+    import pygame
+except ImportError:
+    print("This program requires pygame to run.")
+    print("Please install pygame (pip install pygame) and rerun.")
+    exit(1)
 
 
 def make_list(n: int) -> list[int]:
@@ -117,7 +115,9 @@ def run(
                 arr[bubble_j], arr[bubble_j + 1] = arr[bubble_j + 1], arr[bubble_j]
                 offsets = [1, 0]
 
-            should_exit = draw_graph(win, font, arr, clock, fps, offsets, bubble_i, bubble_j, False)
+            should_exit = draw_graph(
+                win, font, arr, clock, fps, offsets, bubble_i, bubble_j, False
+            )
             if should_exit:
                 return
 
@@ -125,15 +125,22 @@ def run(
         bubble_i += advance
 
     while True:
-        should_exit = draw_graph(win, font, arr, clock, fps, offsets, len(arr), -2, True)
+        should_exit = draw_graph(
+            win, font, arr, clock, fps, offsets, len(arr), -2, True
+        )
         if should_exit:
             return
 
 
-if __name__ == "__main__":
+def main():
     win = create_window(800, 600, "Visual Sort: Bubble Sort")
     font = create_font(40, "Calibri")
+
+    print("Press (and/or hold) the Enter key to advance the sort.")
 
     run(win, font, 4, 8)
 
     pygame.quit()
+
+
+main()
