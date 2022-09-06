@@ -24,10 +24,10 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> li
 	Return val: A copy of the sorted list
 
 	This is the insertion sort algorithm:
-        - assume item at index 0 is already "sorted"
-        - starting with item at index 1, check all items to the left and swap positions if needed
-        - do the same for item at index 2, where now items at index 0 and 1 should be in order
-        - do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
+		- assume item at index 0 is already "sorted"
+		- starting with item at index 1, check all items to the left and swap positions if needed
+		- do the same for item at index 2, where now items at index 0 and 1 should be in order
+		- do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
 	"""
 	new_arr = copy_list(arr)
 	for i in range(1, len(new_arr)):
@@ -63,7 +63,7 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
 			high = mid - 1			  # to the left of the middle index
 		else:						  # otherwise move the boundaries to the right
 			low = mid + 1			  # of the middle index
-	return -(low + 1)				  # return the negative index where is should be
+	return -(low + 1)				  # return -(insertion point + 1)
 
 
 def read_file(filename: str) -> list[str]:
@@ -79,7 +79,7 @@ def read_file(filename: str) -> list[str]:
 		for line in file:				# loop through the lines in the file
 			line = line.strip().lower() # get rid of whitespace and capital letters
 			lines.append(line)			# add line to list of lines
-	return lines						# return line
+	return lines						# return lines
 
 
 def get_stop_words(filename: str) -> list[str]:
