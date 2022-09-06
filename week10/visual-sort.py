@@ -6,10 +6,8 @@ import pygame
 
 """
 TODO:
-- Indicate the comparison
 - Indication that pygame is needed
 - Comments
-- Text
 """
 
 

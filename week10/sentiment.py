@@ -70,9 +70,7 @@ def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[lis
     lines = read_file(reviews_filename)
     stop_words = get_stop_words(stop_words_filename)  # already sorted
     word_scores: list[list[Any]] = []
-    i = 0
     for line in lines:
-        i += 1
         try:
             items = line.split()
             score = int(items[0])
