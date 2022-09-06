@@ -3,7 +3,23 @@ from typing import Any  # support for explicit 'Any' type
 
 import pygame
 
-from sorts import make_list, copy_list
+
+"""
+TODO:
+- Indicate the comparison
+- Keyboard input for toggling pause
+- Indication that pygame is needed
+- Comments
+- Text
+"""
+
+def make_list(n: int) -> list[int]:
+    """
+    Purpose: Makes a list of integers 0 to n
+    Parameters: n (int) the length of the list
+    Return val: A list of integers 0 to n
+    """
+    return [i for i in range(n)]
 
 
 def create_window(width: int, height: int, title: str) -> pygame.surface.Surface:

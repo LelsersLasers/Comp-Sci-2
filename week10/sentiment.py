@@ -1,7 +1,37 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
-from sorts import insertion_sort
+
+def copy_list(arr: list[Any]) -> list[Any]:
+    """
+    Purpose: Copies a list
+    Parameters: arr (list) the list to copy
+    Return val: The copied list
+    """
+    return [x for x in arr]
+
+def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> list[Any]:
+    """
+    This is the insertion sort algorithm:
+        - assume item at index 0 is already "sorted"
+        - starting with item at index 1, check all items to the left and swap positions if needed
+        - do the same for item at index 2, where now items at index 0 and 1 should be in order
+        - do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
+    Purpose: Sorts a list (using the Insertion sort algrothrim)
+    Parameters: arr (list) the list to be sorted
+    Return val: A copy of the sorted list
+    """
+    new_arr = copy_list(arr)
+    for i in range(1, len(new_arr)):
+        val = new_arr[i]
+        j = i - 1
+        while j >= 0 and key(val) < key(new_arr[j]):
+            new_arr[j + 1] = new_arr[j]
+            j -= 1
+        new_arr[j + 1] = val
+    if reverse:
+        return list(reversed(new_arr))
+    return new_arr
 
 
 def binary_search(arr: list[Any], element: Any, key=lambda x: x):
