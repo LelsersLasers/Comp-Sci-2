@@ -51,7 +51,7 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
 		the key will get the desired value from the list to be searching for). key
 		is defaulted to just returning the value without anything special.
 	Return val: the index (int) of the found value, or the negative index of the
-		location that the value is supposed to be at
+		insertion point + 1
 	"""
 	low = 0
 	high = len(arr) - 1 			  # Get boundary indexes
@@ -66,38 +66,40 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
 	return -(low + 1)				  # return -(insertion point + 1)
 
 
-def read_file(filename: str) -> list[str]:
+def read_stopwords(filename: str) -> list[str]:
 	"""
-	Purpose: To read the lines from a text file
-	Parameters: Filename (str) is the name of the file that the function should
-		read data from
-	Return val: lines (list) of the lines from the file that were read into the
-		program
+	Purpose: To read the stopwords from a file
+	Parameters: filename (str) is the name of the file to read the stopwords from
+	Return val: words (list) of the stopwords that were read from the file
 	"""
-	lines = []
+	stopwords = []
 	with open(filename, "r") as file:	# open the file
 		for line in file:				# loop through the lines in the file
 			line = line.strip().lower() # get rid of whitespace and capital letters
-			lines.append(line)			# add line to list of lines
-	return lines						# return lines
+			if line.isalpha():
+				stopwords.append(line)
+	return stopwords
+
+def read_movie_reviews(filename: str) -> list[list[Any]]:
+	movie_reviews = []
+	with open(filename, "r") as file:
+		for line in file:
+			line = line.strip().lower()
+			items = line.split()
+			try:
+				score = int(items[0])
+				review_words = []
+				for word in items[1:]:					  # loop through word in review
+					word = word.lower()
+					if word.isalpha():
+						review_words.append(word)
+				movie_reviews.append([score, review_words])
+			except:
+				print("Review skipped, incorrect format")
+	return movie_reviews
 
 
-def get_stop_words(filename: str) -> list[str]:
-	"""
-	Purpose: To get the stopwords from a file
-	Parameters: Filename (str) is the file to get the stopwords from
-	Return val: words (list of strings) is the list of stop words that the program
-		will use, which is sorted alphabetically
-	"""
-	lines = read_file(filename) # Get stopwords
-	words = []
-	for line in lines:
-		if line.isalpha():		# if the line is only alphabet characters
-			words.append(line)	# add to list
-	return words				# return list
-
-
-def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[list[Any]]:
+def score_words(stopwords: list[str], movie_reviews: list[list[Any]]) -> list[list[Any]]:
 	"""
 	Purpose: Gets the reviews and scores the words based on the review score
 	Parameters: the files names (str) are the names of the files to get reviews
@@ -105,26 +107,15 @@ def get_word_scores(reviews_filename: str, stop_words_filename: str) -> list[lis
 	Return val: list of list of the word (str) and the score of the word (int) which
 		is sorted alphabetically
 	"""
-	lines = read_file(reviews_filename)				  # get reviews
-	stop_words = get_stop_words(stop_words_filename)  # get sorted stopwords
 	word_scores: list[list[Any]] = []				  # list of lists of words and score
-	for line in lines:
-		try:										  # if review is formatted correctly
-			items = line.split()					  # get each word
-			score = int(items[0])					  # get score of review
-			for word in items[1:]:					  # loop through word in review
-				word = word.lower()
-				# if the word is alphabet and is not a stopword
-				if word.isalpha() and binary_search(stop_words, word) < 0:
-					idx = binary_search(word_scores, word, lambda x: x[0])
-					if idx < 0:
-						word_scores.insert(-idx - 1, [word, score - 2])
-					else:
-						word_scores[idx][1] += score - 2
-		except ValueError:							  # Skip review if not formatted
-			print("Review skipped, incorrect format") # correctly
-
-	word_scores = insertion_sort(word_scores, key=lambda x: x[1], reverse=True)
+	for review in movie_reviews:
+		for word in review[1]:
+			if binary_search(stopwords, word) < 0:
+				idx = binary_search(word_scores, word, lambda x: x[0])
+				if idx < 0:
+					word_scores.insert(-idx - 1, [word, review[0] - 2])
+				else:
+					word_scores[idx][1] += review[0] - 2
 	return word_scores
 
 
@@ -157,5 +148,10 @@ def display_word_scores(word_scores: list[list[Any]]) -> None:
 
 
 if __name__ == "__main__":
-	word_scores = get_word_scores("movieReviews.txt", "stopwords.txt")
+	stopwords = read_stopwords("stopwords.txt")
+	movie_reviews = read_movie_reviews("movieReviews.txt")
+
+	word_scores = score_words(stopwords, movie_reviews)
+	word_scores = insertion_sort(word_scores, key=lambda x: x[1], reverse=True)
+	
 	display_word_scores(word_scores)
