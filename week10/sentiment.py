@@ -55,15 +55,15 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
 			insertion point + 1
 	"""
 	low = 0
-	high = len(arr) - 1	# Get boundary indexes
-	while low <= high:  # Continue searching until item not in list
-		mid = (low + high) // 2  # Calculate the middle value within boundaries
-		if key(arr[mid]) == element:  # If desired value is found, return the index
+	high = len(arr) - 1
+	while low <= high:
+		mid = (low + high) // 2
+		if key(arr[mid]) == element:
 			return mid
-		elif key(arr[mid]) > element:  # If the value is smaller, move the boundaries
-			high = mid - 1  # to the left of the middle index
-		else:  # otherwise move the boundaries to the right
-			low = mid + 1  # of the middle index
+		elif key(arr[mid]) > element:
+			high = mid - 1
+		else:
+			low = mid + 1
 	return -(low + 1)  # return -(insertion point + 1)
 
 
@@ -71,18 +71,24 @@ def read_stopwords(filename: str) -> list[str]:
 	"""
 	Purpose: To read the stopwords from a file
 	Parameters: filename (str) is the name of the file to read the stopwords from
-	Return val: words (list) of the stopwords that were read from the file
+	Return val: words (list) of the stopwords that were read from the file (sorted)
 	"""
 	stopwords = []
-	with open(filename, "r") as infile:  # open the file
-		for line in infile:  # loop through the lines in the file
-			line = line.strip().lower()  # get rid of whitespace and capital letters
+	with open(filename, "r") as infile:
+		for line in infile:
+			line = line.strip().lower()
 			if line.isalpha():
 				stopwords.append(line)
 	return stopwords
 
 
 def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
+	"""
+    Purpose: To read reviews and score words based on the reviews
+    Parameters: filename (str) is the name of the file to read the reviews from
+		and the words to ignore (list)
+    Return val: The scores for each word (unsorted)
+    """
 	word_scores: list[list[Any]] = []
 	with open(filename, "r") as infile:
 		for line in infile:
