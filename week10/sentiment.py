@@ -25,10 +25,10 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> li
 	Return val: A copy of the sorted list
 
 	This is the insertion sort algorithm:
-			- assume item at index 0 is already "sorted"
-			- starting with item at index 1, check all items to the left and swap positions if needed
-			- do the same for item at index 2, where now items at index 0 and 1 should be in order
-			- do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
+	- assume item at index 0 is already "sorted"
+	- starting with item at index 1, check all items to the left and swap positions if needed
+	- do the same for item at index 2, where now items at index 0 and 1 should be in order
+	- do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
 	"""
 	new_arr = copy_list(arr)
 	for i in range(1, len(new_arr)):

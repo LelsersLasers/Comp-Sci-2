@@ -1,6 +1,8 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
+import time
+
 try:
     import pygame
 except ImportError:
@@ -33,8 +35,6 @@ def draw_graph(
     win: pygame.surface.Surface,
     font: pygame.font.Font,
     arr: list[int],
-    clock: pygame.time.Clock,
-    fps: int,
     offsets: list[int],
     bubble_i: int,
     bubble_j: int,
@@ -80,8 +80,6 @@ def draw_graph(
     win.blit(surf_text, ((win.get_width() - surf_text.get_width()) / 2, 530))
 
     pygame.display.update()
-    clock.tick(fps)
-
     return False
 
 
@@ -101,14 +99,27 @@ def run(
     arr = make_list(arr_len)
     random.shuffle(arr)
 
-    clock = pygame.time.Clock()
+
+    time_passed = 0.
+    last_frame = time.time()
+
+
 
     advance = False
     bubble_i = 0
     while bubble_i < len(arr):
         bubble_j = 0
         while bubble_j < len(arr) - bubble_i - 1:
-            advance = pygame.key.get_pressed()[pygame.K_RETURN]
+            delta = time.time() - last_frame
+            last_frame = time.time()
+            time_passed = time_passed + delta
+
+            enter_down = pygame.key.get_pressed()[pygame.K_RETURN]
+            advance = False
+            if enter_down:
+                if time_passed > 1 / 4:
+                    advance = True
+                    time_passed = 0
 
             offsets = [0, 1]
             if advance and arr[bubble_j] > arr[bubble_j + 1]:
@@ -116,7 +127,7 @@ def run(
                 offsets = [1, 0]
 
             should_exit = draw_graph(
-                win, font, arr, clock, fps, offsets, bubble_i, bubble_j, False
+                win, font, arr, offsets, bubble_i, bubble_j, False
             )
             if should_exit:
                 return
@@ -126,7 +137,7 @@ def run(
 
     while True:
         should_exit = draw_graph(
-            win, font, arr, clock, fps, offsets, len(arr), -2, True
+            win, font, arr, offsets, len(arr), -2, True
         )
         if should_exit:
             return
