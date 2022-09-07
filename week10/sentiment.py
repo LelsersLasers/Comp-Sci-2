@@ -98,11 +98,15 @@ def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
 				score = int(items[0]) - 2
 				review = items[1:]
 				for word in review:
+					# Is valid word
 					if word.isalpha() and binary_search(stopwords, word) < 0:
+						# Get index of word in word scores list
 						idx = binary_search(word_scores, word, lambda x: x[0])
 						if idx < 0:
+							# insert where supposed to be if not in list
 							word_scores.insert(-idx - 1, [word, score])
 						else:
+							# otherwise just increase the score
 							word_scores[idx][1] += score
 			except:
 				print("Review skipped, incorrect format")
