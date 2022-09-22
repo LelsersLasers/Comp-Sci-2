@@ -18,6 +18,7 @@ def find_files(path: str, pattern: str) -> None:
     try:
         path = expanduser(path)
         for file in listdir(path):
+            # check if dir first, so we don't print names of folders
             if isdir(path + "/" + file):
                 find_files(path + "/" + file, pattern)
             elif pattern in file:

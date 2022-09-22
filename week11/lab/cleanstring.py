@@ -15,9 +15,11 @@ def clean_string(text: str, char: str) -> str:
     """
     if len(text) == 0:
         return ""
-    if text[0] == char:
-        return clean_string(text[1:], char)
-    return text[0] + clean_string(text[1:], char)
+    else:
+        if text[0] == char:
+            return "" + clean_string(text[1:], char)
+        else:
+            return text[0] + clean_string(text[1:], char)
 
 
 def get_char() -> str:

@@ -15,7 +15,8 @@ def multiply_str(string: str, num: int) -> str:
     """
     if num == 0:
         return ""
-    return string + multiply_str(string, num - 1)
+    else:
+        return string + multiply_str(string, num - 1)
 
 
 def silly_text(text: str, num: int) -> str:
@@ -26,7 +27,8 @@ def silly_text(text: str, num: int) -> str:
     """
     if len(text) == 0:
         return ""
-    return multiply_str(text[0], num) + silly_text(text[1:], num)
+    else:
+        return multiply_str(text[0], num) + silly_text(text[1:], num)
 
 
 def get_pos_int() -> int:
