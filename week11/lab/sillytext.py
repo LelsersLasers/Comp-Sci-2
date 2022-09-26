@@ -38,8 +38,9 @@ def get_pos_int() -> int:
     Return Val: a positive integer (int)
     """
     while True:
+        user_input = input("num: ")
         try:
-            num = int(input("num: "))
+            num = int(user_input)
             assert num >= 0
             return num
         except:

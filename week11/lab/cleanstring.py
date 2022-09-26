@@ -29,11 +29,10 @@ def get_char() -> str:
     Return Val: a string with a length of one (str)
     """
     while True:
-        try:
-            char = input("ch    : ")
-            assert len(char) == 1
+        char = input("ch    : ")
+        if len(char) == 1:
             return char
-        except:
+        else:
             print("Invalid. Please enter a single character.")
 
 
