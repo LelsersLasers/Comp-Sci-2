@@ -67,11 +67,9 @@ def recusive_flower(
         and number of flowers remaining to draw (int)
     Return Val: None
     """
-    if depth == 0:
-        return
-    else:
-        draw_flower(win, pt, size)
+    draw_flower(win, pt, size)
 
+    if depth > 0:
         top_left_center = (pt[0] - size * 1.5, pt[1] - size * 1.5)
         bottom_left_center = (pt[0] - size * 1.5, pt[1] + size * 1.5)
         top_right_center = (pt[0] + size * 1.5, pt[1] - size * 1.5)
@@ -84,8 +82,12 @@ def recusive_flower(
 
 
 def main():
+    window_size = 600
+
     # create a window to use for pygame
-    win = create_window(600, 600, "Recursive Flower")
+    win = create_window(window_size, window_size, "Recursive Flower")
+    starting_pt = (window_size / 2, window_size / 2)
+    starting_size = window_size / 5
 
     # pygame event/redraw loop
     while True:
@@ -94,7 +96,7 @@ def main():
                 return
 
         win.fill("#2E3440")
-        recusive_flower(win, (300, 300), 125, 5)
+        recusive_flower(win, starting_pt, starting_size, 5)
         pygame.display.update()
 
 
