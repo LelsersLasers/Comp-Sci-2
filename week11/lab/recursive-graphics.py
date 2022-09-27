@@ -5,6 +5,8 @@
 """
 
 from __future__ import annotations  # type hint support
+import sys
+
 
 try:
     import pygame
@@ -81,6 +83,20 @@ def recusive_flower(
         recusive_flower(win, bottom_right_center, size / 2.5, depth - 1)
 
 
+def read_depth() -> int:
+    """
+    Purpose: Tries to get the recursion depth from the command line argument
+    Parameters: None
+    Return Val: The inputed value or 5 if a valid number was not given
+    """
+    try:
+        depth = int(sys.argv[1])
+        return depth
+    except:
+        print("Unable to read max depth from command line argument (using default value: 5")
+        return 5
+
+
 def main():
     window_size = 600
 
@@ -89,6 +105,9 @@ def main():
     starting_pt = (window_size / 2, window_size / 2)
     starting_size = window_size / 5
 
+    # read from command line argument
+    max_depth = read_depth()
+
     # pygame event/redraw loop
     while True:
         for event in pygame.event.get():
@@ -96,7 +115,7 @@ def main():
                 return
 
         win.fill("#2E3440")
-        recusive_flower(win, starting_pt, starting_size, 5)
+        recusive_flower(win, starting_pt, starting_size, max_depth)
         pygame.display.update()
 
 
