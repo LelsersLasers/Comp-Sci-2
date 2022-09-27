@@ -34,9 +34,6 @@ def create_window(width: int, height: int, title: str) -> pygame.surface.Surface
 def recusive_h(
     win: pygame.surface.Surface, pt: tuple[float, float], size: float, depth: int
 ) -> None:
-    if depth == 0:
-        return
-
     top_left = (pt[0] - size, pt[1] - size)
     middle_left = (pt[0] - size, pt[1])
     bottom_left = (pt[0] - size, pt[1] + size)
@@ -48,10 +45,11 @@ def recusive_h(
     pygame.draw.line(win, (255, 255, 255), top_right, bottom_right)
     pygame.draw.line(win, (255, 255, 255), middle_left, middle_right)
 
-    recusive_h(win, top_left, size / 2.5, depth - 1)
-    recusive_h(win, bottom_left, size / 2.5, depth - 1)
-    recusive_h(win, top_right, size / 2.5, depth - 1)
-    recusive_h(win, bottom_right, size / 2.5, depth - 1)
+    if depth > 0:
+        recusive_h(win, top_left, size / 2.5, depth - 1)
+        recusive_h(win, bottom_left, size / 2.5, depth - 1)
+        recusive_h(win, top_right, size / 2.5, depth - 1)
+        recusive_h(win, bottom_right, size / 2.5, depth - 1)
 
 
 def main():
@@ -62,7 +60,7 @@ def main():
             if event.type == pygame.QUIT:
                 return
         win.fill((0, 0, 0))
-        recusive_h(win, (300, 300), 150, 5)
+        recusive_h(win, (300, 300), 150, 4)
         pygame.display.update()
 
 
