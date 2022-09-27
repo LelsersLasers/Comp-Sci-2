@@ -59,7 +59,7 @@ def draw_flower(
     pygame.draw.circle(win, "#4C566A", pt, size, 1)
 
 
-def recusive_flower(
+def recursive_flower(
     win: pygame.surface.Surface, pt: tuple[float, float], size: float, depth: int
 ) -> None:
     """
@@ -77,10 +77,10 @@ def recusive_flower(
         top_right_center = (pt[0] + size * 1.5, pt[1] - size * 1.5)
         bottom_right_center = (pt[0] + size * 1.5, pt[1] + size * 1.5)
 
-        recusive_flower(win, top_left_center, size / 2.5, depth - 1)
-        recusive_flower(win, bottom_left_center, size / 2.5, depth - 1)
-        recusive_flower(win, top_right_center, size / 2.5, depth - 1)
-        recusive_flower(win, bottom_right_center, size / 2.5, depth - 1)
+        recursive_flower(win, top_left_center, size / 2.5, depth - 1)
+        recursive_flower(win, bottom_left_center, size / 2.5, depth - 1)
+        recursive_flower(win, top_right_center, size / 2.5, depth - 1)
+        recursive_flower(win, bottom_right_center, size / 2.5, depth - 1)
 
 
 def read_depth() -> int:
@@ -115,7 +115,7 @@ def main():
                 return
 
         win.fill("#2E3440")
-        recusive_flower(win, starting_pt, starting_size, max_depth)
+        recursive_flower(win, starting_pt, starting_size, max_depth)
         pygame.display.update()
 
 
