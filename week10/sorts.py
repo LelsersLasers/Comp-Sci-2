@@ -144,6 +144,49 @@ def jerry_sort_full(arr: list[Any]) -> list[Any]:
     jerry_sort(new_arr, 0, len(new_arr) - 1)
     return new_arr
 
+def merge(L: list[Any], R: list[Any], arr: list[Any]):
+    i = 0
+    j = 0
+    k = 0
+ 
+    while i < len(L) and j < len(R):
+        if L[i] <= R[j]:
+            arr[k] = L[i]
+            i += 1
+        else:
+            arr[k] = R[j]
+            j += 1
+        k += 1
+
+    while i < len(L):
+        arr[k] = L[i]
+        i += 1
+        k += 1
+    while j < len(R):
+        arr[k] = R[j]
+        j += 1
+        k += 1
+
+
+def merge_sort(L: list[Any]):
+    if len(L) > 1:
+        half = len(L) // 2		 # split into two lists
+        L1 = L[0:half]
+        L2 = L[half:]
+        merge_sort(L1)			 # sort each list
+        merge_sort(L2)
+        merge(L1,L2,L)		     # merge them back into one sorted list
+
+def merge_sort_full(arr: list[Any]) -> list[Any]:
+    """
+    Purpose: Sorts a list (using the Merge sort algrothrim)
+    Parameters: arr (list) the list to be sorted
+    Return val: A copy of the sorted list
+    """
+    new_arr = copy_list(arr)
+    merge_sort(new_arr)
+    return new_arr
+
 
 def python_sort(arr: list[Any]) -> list[Any]:
     """

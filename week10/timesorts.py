@@ -69,8 +69,8 @@ if __name__ == "__main__":
 
     arr_len, doubles = get_input()
 
-    sorts = [my_sort, bubble_sort, insertion_sort, selection_sort, python_sort]
-    sort_names = ["My sort", "Bubble sort", "Insertion sort", "Selection sort", "Python sort"]
+    sorts = [my_sort, bubble_sort, insertion_sort, selection_sort, merge_sort_full, python_sort]
+    sort_names = ["My sort", "Bubble sort", "Insertion sort", "Selection sort", "Merge sort", "Python sort",]
     times = time_sorts(arr_len, doubles, sorts)
 
     for multiplier in range(0, doubles):
