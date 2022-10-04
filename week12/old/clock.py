@@ -13,10 +13,10 @@ class Clock(object):
         self.secCounter = Counter(60)
         self.secCounter.setValue(sec)
     def __str__(self):
-        returnVal = "Clock: %i:%i:%i" % (self.hourCounter.value, self.minCounter.value, self.secCounter.value)
+        returnVal = "%02i:%02i:%02i" % (self.getHour(), self.getMin(), self.getSec())
         return returnVal
     def getTime(self):
-        returnVal = "%i:%i:%i" % (self.hourCounter.value, self.minCounter.value, self.secCounter.value)
+        returnVal = "%02i:%02i:%02i" % (self.getHour(), self.getMin(), self.getSec())
         return returnVal
     def getHour(self):
         return self.hourCounter.getValue()
@@ -31,7 +31,7 @@ class Clock(object):
     def setSec(self, newValue):
         self.secCounter.setValue(newValue)
     def tick(self):
-        if self.secCounter.increment():
+        if self.secCounter.increment(): # increment returns True if it rolls over
             if self.minCounter.increment():
                 self.hourCounter.increment()
 

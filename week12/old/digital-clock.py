@@ -21,7 +21,7 @@ def main():
         clockText.setOutline("green")
         clockText.draw(gw)
 
-        sleep(0.9)        # sleep for 1 second and tick the clock forward one sec
+        sleep(1)        # sleep for 1 second and tick the clock forward one sec
         digClock.tick()
 
         clockText.undraw()  # undraw old time, so can display the new time
