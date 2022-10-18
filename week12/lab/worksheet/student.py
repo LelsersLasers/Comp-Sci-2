@@ -4,6 +4,16 @@ class Student:
         self.graduation_year: int = graduation_year
         self.major: str = "Undecided"
 
+    def __str__(self) -> str:
+        return self.to_string()
+
+    def to_string(self) -> str:
+        return "Name: %s, Graduation Year: %i, Major: %s" % (
+            self.name,
+            self.graduation_year,
+            self.major,
+        )
+
     def get_name(self) -> str:
         return self.name
 
@@ -21,13 +31,6 @@ class Student:
 
     def set_major(self, major: str) -> None:
         self.major = major
-
-    def to_string(self) -> str:
-        return "Name: %s, Graduation Year: %i, Major: %s" % (
-            self.name,
-            self.graduation_year,
-            self.major,
-        )
 
 
 def main():
