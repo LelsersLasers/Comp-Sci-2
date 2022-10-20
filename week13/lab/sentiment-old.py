@@ -1,12 +1,15 @@
 """
 	Description: To get movie reviews from a file and check perform sentiment analysis
-		on the words in the review, and show the best and worst words
-	Author: Jerry and Millan
-	Date: 9/6/22
+		on the words in the review, and show the best and worst words. Uses a list of lists
+        to store the words and their scores
+	Author: Millan
+	Date: 10/20/22
 """
 
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
+
+import time # for testing the runtime of the program
 
 
 def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> None:
@@ -135,6 +138,8 @@ def display_word_scores(word_scores: list[list[Any]], number_to_display: int) ->
 
 def main():
 
+    start_time = time.time()
+
     # reads in the words to ignore (pre sorted)
     stopwords = read_stopwords("stopwords.txt")
 
@@ -146,6 +151,9 @@ def main():
 
     # displays the words and their scores
     display_word_scores(word_scores, 20)
+
+    elapsed_time = time.time() - start_time
+    print("\n\nElapsed time: %.2f seconds" % elapsed_time)
 
 
 main()
