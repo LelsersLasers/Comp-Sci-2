@@ -72,14 +72,14 @@ def read_stopwords(filename: str) -> list[str]:
 	return stopwords
 
 
-def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
+def get_word_scores(filename: str, stopwords: list[str]) -> dict[str, int]:
 	"""
     Purpose: To read reviews and score words based on the reviews
     Parameters: filename (str) is the name of the file to read the reviews from
 		and the words to ignore (list)
     Return val: The scores for each word (unsorted)
     """
-	word_scores: list[list[Any]] = []
+	word_scores: dict[str, int] = {}
 	with open(filename, "r") as infile:
 		for line in infile:
 			line = line.strip().lower()
@@ -90,20 +90,16 @@ def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
 				for word in review:
 					# Is valid word
 					if word.isalpha() and binary_search(stopwords, word) < 0:
-						# Get index of word in word scores list
-						idx = binary_search(word_scores, word, lambda x: x[0])
-						if idx < 0:
-							# insert where supposed to be if not in list
-							word_scores.insert(-idx - 1, [word, score])
-						else:
-							# otherwise just increase the score
-							word_scores[idx][1] += score
+						try:
+							word_scores[word] += score
+						except KeyError:
+							word_scores[word] = score
 			except:
 				print("Review skipped, incorrect format")
 	return word_scores
 
 
-def print_word_score(word_score: list[Any]) -> None:
+def print_word_score(word_score: tuple[str, int]) -> None:
 	"""
 	Purpose: Displays the scores and the word to the console
 	Parameters: word_score (list) which contains the word (str) and the score (int)
@@ -113,22 +109,22 @@ def print_word_score(word_score: list[Any]) -> None:
 	return
 
 
-def display_word_scores(word_scores: list[list[Any]], number_to_display: int) -> None:
+def display_word_scores(word_score_tuples: list[tuple[str, int]], number_to_display: int) -> None:
 	"""
 	Purpose: To format how the scores of the words are displayed
 	Parameters: a list of lists which contains a word (str) and a score (int)
 	Return val: None
 	"""
-	if len(word_scores) < number_to_display * 2:
+	if len(word_score_tuples) < number_to_display * 2:
 		print("All word scores:")
-		for word_score in word_scores:
+		for word_score in word_score_tuples:
 			print_word_score(word_score)
 	else:
 		print("Top 20")
-		for word_score in word_scores[:number_to_display]:
+		for word_score in word_score_tuples[:number_to_display]:
 			print_word_score(word_score)
 		print("\nBottom 20")
-		for word_score in word_scores[-number_to_display:]:
+		for word_score in word_score_tuples[-number_to_display:]:
 			print_word_score(word_score)
 	return
 
@@ -142,10 +138,11 @@ def main():
 	word_scores = get_word_scores("movieReviews.txt", stopwords)
 
 	# sorts the words based on their scores
-	word_scores = insertion_sort(word_scores, key=lambda x: x[1], reverse=True)
+	word_score_tuples = list(word_scores.items())
+	insertion_sort(word_score_tuples, key=lambda item: item[1], reverse=True)
 
 	# displays the words and their scores
-	display_word_scores(word_scores, 20)
+	display_word_scores(word_score_tuples, 20)
 
 
 
