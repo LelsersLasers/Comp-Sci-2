@@ -9,7 +9,7 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
-import time # for testing the runtime of the program
+import time  # for testing the runtime of the program
 
 
 def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> None:
@@ -75,6 +75,39 @@ def read_stopwords(filename: str) -> list[str]:
     return stopwords
 
 
+def is_valid_word(word: str, stopwords: list[str]) -> bool:
+    """
+    Purpose: To check if a word is valid
+    Parameters: word (str) is the word to check, stopwords (list) is the list of words to ignore
+    Return val: True if the word is valid, False otherwise
+    """
+    return word.isalpha() and binary_search(stopwords, word) < 0
+
+
+def score_words_in_review(
+    items: list[str], word_scores: list[list[Any]], stopwords: list[str]
+) -> int:
+    """
+    Purpose: To score the words in a review
+    Parameters: items (list) is the review containing the words and the score, word_scores (list)
+        of words and their scores, stopwords (list) is the list of words to ignore
+    Return val: The score of the review (int)
+    """
+    # items = [score, word1, word2, ...]
+    score = int(items[0]) - 2
+    review = items[1:]
+    for word in review:
+        if is_valid_word(word, stopwords):
+            # Get index of word in word scores list
+            idx = binary_search(word_scores, word, lambda x: x[0])
+            if idx < 0:
+                # insert where supposed to be if not in list
+                word_scores.insert(-idx - 1, [word, score])
+            else:
+                # otherwise just increase the score
+                word_scores[idx][1] += score
+
+
 def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
     """
     Purpose: To read reviews and score words based on the reviews
@@ -88,19 +121,7 @@ def get_word_scores(filename: str, stopwords: list[str]) -> list[list[Any]]:
             line = line.strip().lower()
             items = line.split()
             try:
-                score = int(items[0]) - 2
-                review = items[1:]
-                for word in review:
-                    # Is valid word
-                    if word.isalpha() and binary_search(stopwords, word) < 0:
-                        # Get index of word in word scores list
-                        idx = binary_search(word_scores, word, lambda x: x[0])
-                        if idx < 0:
-                            # insert where supposed to be if not in list
-                            word_scores.insert(-idx - 1, [word, score])
-                        else:
-                            # otherwise just increase the score
-                            word_scores[idx][1] += score
+                score_words_in_review(items, word_scores, stopwords)
             except:
                 print("Review skipped, incorrect format")
     return word_scores

@@ -9,14 +9,14 @@
 from __future__ import annotations  # type hint support
 from typing import Any  # support for explicit 'Any' type
 
-import time # for testing the runtime of the program
+import time  # for testing the runtime of the program
 
 
 def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> None:
     """
     Purpose: Sorts a list (using the Insertion sort algrothrim)
     Parameters: arr (list) that is sorted, key (optional function) a transform
-		to be applied when comparing values, reverse (optional bool) sort descending or ascending
+        to be applied when comparing values, reverse (optional bool) sort descending or ascending
     Return val: None
 
     This is the insertion sort algorithm:
@@ -42,7 +42,7 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
     Purpose: Finds the desired value in a list
     Parameters: arr (list) to be searched, element (Any) that is being searched for in the
         list, key (optional function) a transform applied to the items in the list but not
-		the element being search for
+        the element being search for
     Return val: the index (int) of the found value, or the negative index of the insertion point + 1
     """
     low = 0
@@ -73,6 +73,35 @@ def read_stopwords(filename: str) -> list[str]:
     return stopwords
 
 
+def is_valid_word(word: str, stopwords: list[str]) -> bool:
+    """
+    Purpose: To check if a word is valid
+    Parameters: word (str) is the word to check, stopwords (list) is the list of words to ignore
+    Return val: True if the word is valid, False otherwise
+    """
+    return word.isalpha() and binary_search(stopwords, word) < 0
+
+
+def score_words_in_review(
+    items: list[str], word_scores: dict[str, int], stopwords: list[str]
+) -> int:
+    """
+    Purpose: To score the words in a review
+    Parameters: items (list) is the review containing the words and the score, word_scores (dict)
+        is the dictionary of words and their scores, stopwords (list) is the list of words to ignore
+    Return val: The score of the review (int)
+    """
+    # items = [score, word1, word2, ...]
+    score = int(items[0]) - 2
+    review = items[1:]
+    for word in review:
+        if is_valid_word(word, stopwords):
+            try:
+                word_scores[word] += score
+            except KeyError:
+                word_scores[word] = score
+
+
 def get_word_scores(filename: str, stopwords: list[str]) -> dict[str, int]:
     """
     Purpose: To read reviews and score words based on the reviews
@@ -86,15 +115,7 @@ def get_word_scores(filename: str, stopwords: list[str]) -> dict[str, int]:
             line = line.strip().lower()
             items = line.split()
             try:
-                score = int(items[0]) - 2
-                review = items[1:]
-                for word in review:
-                    # Is valid word
-                    if word.isalpha() and binary_search(stopwords, word) < 0:
-                        try:
-                            word_scores[word] += score
-                        except KeyError:
-                            word_scores[word] = score
+                score_words_in_review(items, word_scores, stopwords)
             except:
                 print("Review skipped, incorrect format")
     return word_scores
@@ -143,8 +164,8 @@ def main():
     word_scores = get_word_scores("movieReviews.txt", stopwords)
 
     # sorts the words based on their scores
-    word_score_tuples = list(word_scores.items()) # list[tuple[word, score]]
-	# lambda item: item[1] = sort based on score; reverse=True = sort descending
+    word_score_tuples = list(word_scores.items())  # list[tuple[word, score]]
+    # lambda item: item[1] = sort based on score; reverse=True = sort descending
     insertion_sort(word_score_tuples, key=lambda item: item[1], reverse=True)
 
     # displays the words and their scores
@@ -152,7 +173,6 @@ def main():
 
     elapsed_time = time.time() - start_time
     print("\n\nElapsed time: %.2f seconds" % elapsed_time)
-    
 
 
 main()
