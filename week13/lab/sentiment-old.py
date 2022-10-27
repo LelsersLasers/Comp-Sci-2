@@ -1,7 +1,7 @@
 """
 	Description: To get movie reviews from a file and check perform sentiment analysis
-		on the words in the review, and show the best and worst words. Uses a list of lists
-        to store the words and their scores
+		on the words in the review, and show the best and worst words. Uses a
+        list of lists to store the words and their scores
 	Author: Millan
 	Date: 10/20/22
 """
@@ -17,12 +17,6 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> No
     Purpose: Sorts a list (using the Insertion sort algrothrim)
     Parameters: arr (list) the list to be sorted
     Return val: None
-
-    This is the insertion sort algorithm:
-    - assume item at index 0 is already "sorted"
-    - starting with item at index 1, check all items to the left and swap positions if needed
-    - do the same for item at index 2, where now items at index 0 and 1 should be in order
-    - do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
     """
     for i in range(1, len(arr)):
         val = arr[i]
@@ -40,12 +34,12 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
     """
     Purpose: Finds the desired value in a list
     Parameters: arr (list) of anything to be searched, element (anything) that
-                    is being searched for in the list, key (function) that is used to get the
-                    desired value from the list (for example, if the list is a list of lists,
-                    the key will get the desired value from the list to be searching for). key
-                    is defaulted to just returning the value without anything special.
+        is being searched for in the list, key (function) that is used to get the
+        desired value from the list (for example, if the list is a list of lists,
+        the key will get the desired value from the list to be searching for). key
+        is defaulted to just returning the value without anything special.
     Return val: the index (int) of the found value, or the negative index of the
-                    insertion point + 1
+        insertion point + 1
     """
     low = 0
     high = len(arr) - 1
@@ -89,8 +83,9 @@ def score_words_in_review(
 ) -> int:
     """
     Purpose: To score the words in a review
-    Parameters: items (list) is the review containing the words and the score, word_scores (list)
-        of words and their scores, stopwords (list) is the list of words to ignore
+    Parameters: items (list) is the review containing the words and the score,
+        word_scores (list) of words and their scores, stopwords (list) is the list
+        of words to ignore
     Return val: The score of the review (int)
     """
     # items = [score, word1, word2, ...]

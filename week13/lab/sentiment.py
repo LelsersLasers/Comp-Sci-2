@@ -1,7 +1,7 @@
 """
-	Description: To get movie reviews from a file and check perform sentiment analysis
-		on the words in the review, and show the best and worst words. Uses a dictionary
-        to store the words and their scores
+	Description: To get movie reviews from a file and check perform sentiment
+        analysis on the words in the review, and show the best and worst words.
+        Uses a dictionary to store the words and their scores
 	Author: Millan
 	Date: 10/20/22
 """
@@ -16,14 +16,9 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> No
     """
     Purpose: Sorts a list (using the Insertion sort algrothrim)
     Parameters: arr (list) that is sorted, key (optional function) a transform
-        to be applied when comparing values, reverse (optional bool) sort descending or ascending
+        to be applied when comparing values, reverse (optional bool) sort descending
+        or ascending
     Return val: None
-
-    This is the insertion sort algorithm:
-    - assume item at index 0 is already "sorted"
-    - starting with item at index 1, check all items to the left and swap positions if needed
-    - do the same for item at index 2, where now items at index 0 and 1 should be in order
-    - do the same for item at index 3, where now items at index 0, 1, and 2 are in order...and so on
     """
     for i in range(1, len(arr)):
         val = arr[i]
@@ -40,10 +35,11 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> No
 def binary_search(arr: list[Any], element: Any, key=lambda x: x):
     """
     Purpose: Finds the desired value in a list
-    Parameters: arr (list) to be searched, element (Any) that is being searched for in the
-        list, key (optional function) a transform applied to the items in the list but not
-        the element being search for
-    Return val: the index (int) of the found value, or the negative index of the insertion point + 1
+    Parameters: arr (list) to be searched, element (Any) that is being searched
+        for in the list, key (optional function) a transform applied to the items
+        in the list but not the element being search for
+    Return val: the index (int) of the found value, or the negative index of the
+        insertion point + 1
     """
     low = 0
     high = len(arr) - 1
@@ -62,7 +58,7 @@ def read_stopwords(filename: str) -> list[str]:
     """
     Purpose: To read the stopwords from a file
     Parameters: filename (str) is the name of the file to read the stopwords from
-    Return val: words (list) of the stopwords that were read from the file (already sorted)
+    Return val: words (list) of the stopwords that are already sorted
     """
     stopwords = []
     with open(filename, "r") as infile:
@@ -76,7 +72,8 @@ def read_stopwords(filename: str) -> list[str]:
 def is_valid_word(word: str, stopwords: list[str]) -> bool:
     """
     Purpose: To check if a word is valid
-    Parameters: word (str) is the word to check, stopwords (list) is the list of words to ignore
+    Parameters: word (str) is the word to check, stopwords (list) is the list of
+        words to ignore
     Return val: True if the word is valid, False otherwise
     """
     return word.isalpha() and binary_search(stopwords, word) < 0
@@ -87,8 +84,9 @@ def score_words_in_review(
 ) -> int:
     """
     Purpose: To score the words in a review
-    Parameters: items (list) is the review containing the words and the score, word_scores (dict)
-        is the dictionary of words and their scores, stopwords (list) is the list of words to ignore
+    Parameters: items (list) is the review containing the words and the score,
+        word_scores (dict) is the dictionary of words and their scores, stopwords
+        (list) is the list of words to ignore
     Return val: The score of the review (int)
     """
     # items = [score, word1, word2, ...]
