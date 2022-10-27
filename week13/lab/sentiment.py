@@ -81,13 +81,13 @@ def is_valid_word(word: str, stopwords: list[str]) -> bool:
 
 def score_words_in_review(
     items: list[str], word_scores: dict[str, int], stopwords: list[str]
-) -> int:
+) -> None:
     """
     Purpose: To score the words in a review
-    Parameters: items (list) is the review containing the words and the score,
+    Parameters: items (list) of the review containing the words and the score,
         word_scores (dict) is the dictionary of words and their scores, stopwords
         (list) is the list of words to ignore
-    Return val: The score of the review (int)
+    Return val: None
     """
     # items = [score, word1, word2, ...]
     score = int(items[0]) - 2
@@ -98,6 +98,7 @@ def score_words_in_review(
                 word_scores[word] += score
             except KeyError:
                 word_scores[word] = score
+    return
 
 
 def get_word_scores(filename: str, stopwords: list[str]) -> dict[str, int]:

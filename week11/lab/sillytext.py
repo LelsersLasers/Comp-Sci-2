@@ -31,17 +31,22 @@ def silly_text(text: str, num: int) -> str:
         return multiply_str(text[0], num) + silly_text(text[1:], num)
 
 
-def get_pos_int() -> int:
+# prompt low high
+def get_pos_int(prompt: str, low: int = None, high: int = None) -> int:
     """
     Purpose: gets a positive integer from the user
-    Parameters: None
+    Parameters: prompt (str) is the prompt to display, low (optional int) is the
+        inclusive lower bound, high (optional int) is the inclusive upper bound
     Return Val: a positive integer (int)
     """
     while True:
-        user_input = input("num: ")
+        user_input = input(prompt)
         try:
             num = int(user_input)
-            assert num >= 0
+            if low != None:
+                assert num >= None
+            if high != None:
+                assert num <= high
             return num
         except:
             print("That is not a positive number.")
@@ -49,7 +54,7 @@ def get_pos_int() -> int:
 
 def main():
     text = input("string: ")
-    num = get_pos_int()
+    num = get_pos_int("num: ", 0)
 
     sillified_text = silly_text(text, num)
     print("\n" + sillified_text)

@@ -22,14 +22,14 @@ def clean_string(text: str, char: str) -> str:
             return text[0] + clean_string(text[1:], char)
 
 
-def get_char() -> str:
+def get_char(prompt: str) -> str:
     """
     Purpose: gets a string with a length of one from the user
-    Parameters: None
+    Parameters: Prompt (str) is the prompt to display to the user
     Return Val: a string with a length of one (str)
     """
     while True:
-        char = input("ch    : ")
+        char = input(prompt)
         if len(char) == 1:
             return char
         else:
@@ -38,7 +38,7 @@ def get_char() -> str:
 
 def main():
     text = input("string: ")
-    char = get_char()
+    char = get_char("ch    : ")
 
     cleaned_string = clean_string(text, char)
     print(cleaned_string)
