@@ -81,6 +81,8 @@ def recursive_flower(
         recursive_flower(win, bottom_left_center, size / 2.5, depth - 1)
         recursive_flower(win, top_right_center, size / 2.5, depth - 1)
         recursive_flower(win, bottom_right_center, size / 2.5, depth - 1)
+    
+    return
 
 
 def read_depth() -> int:
@@ -93,7 +95,7 @@ def read_depth() -> int:
         depth = int(sys.argv[1])
         return depth
     except:
-        print("Unable to read max depth from command line argument (using default value: 5")
+        print("Unable to read max depth from command line argument (using default value: 5)")
         return 5
 
 

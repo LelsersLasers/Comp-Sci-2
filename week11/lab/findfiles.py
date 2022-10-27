@@ -16,12 +16,13 @@ def find_files(path: str, pattern: str) -> None:
     Return Val: None
     """
     try:
-        for file in listdir(path):
+        files = listdir(path)
+        for f in files:
             # check if dir first, so we don't print names of folders
-            full_path = path + "/" + file
+            full_path = path + "/" + f
             if isdir(full_path):
                 find_files(full_path, pattern)
-            elif pattern in file:
+            elif pattern in f:
                 print(full_path)
     except PermissionError:
         print("Access is denied: '%s'" % path)

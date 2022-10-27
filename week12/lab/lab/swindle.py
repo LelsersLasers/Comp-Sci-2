@@ -64,7 +64,9 @@ class Swindle(object):
         book_contents = book.get_text()
         book_lines_list = book_contents.split("\n")
         num_lines = len(book_lines_list)
-        num_pages = num_lines // self.page_length  # calculate total number of pages in book
+        num_pages = (
+            num_lines // self.page_length
+        )  # calculate total number of pages in book
         page = book.get_bookmark()  # get current page (most recently read)
         page_start = page * self.page_length
         page_end = page_start + self.page_length  # display 20 lines per page
@@ -87,7 +89,9 @@ class Swindle(object):
         while True:
             self.display_page(book)
             current_page = book.get_bookmark()
-            choice = self.get_letter()  # user chooses to quit or read the next/previous page
+            choice = (
+                self.get_letter()
+            )  # user chooses to quit or read the next/previous page
             if choice == "q":  # quit reading and return to ereader
                 return book
             elif choice == "n":  # move on to the next page in the book
@@ -97,7 +101,9 @@ class Swindle(object):
                 if (currentLine + 1) < (num_lines - self.page_length):
                     book.set_bookmark(current_page + 1)
                 else:
-                    print("\nThere are no more pages. Enter 'p' to go to the previous page or 'q' to quit.")
+                    print(
+                        "\nThere are no more pages. Enter 'p' to go to the previous page or 'q' to quit."
+                    )
             else:  # return to previous page in the book
                 book.set_bookmark(current_page - 1)
 
@@ -132,7 +138,12 @@ class Swindle(object):
         len_books = len(self.available_books)
         if len_books > 0:
             # minus 1 because index starts at 0
-            index = get_valid_int("\nWhich book would you like to buy? (0 to skip): ", len_books) - 1
+            index = (
+                get_valid_int(
+                    "\nWhich book would you like to buy? (0 to skip): ", len_books
+                )
+                - 1
+            )
             if index >= 0:
                 book = self.available_books.pop(index)
                 self.owned_books.append(book)
@@ -145,11 +156,19 @@ class Swindle(object):
         len_books = len(self.owned_books)
         if len_books > 0:
             # minus 1 because index starts at 0
-            index = get_valid_int("\nWhich book would you like to read? (0 to skip): ", len_books) - 1
+            index = (
+                get_valid_int(
+                    "\nWhich book would you like to read? (0 to skip): ", len_books
+                )
+                - 1
+            )
             if index >= 0:
                 book = self.owned_books[index]
                 self.display_text(book)
-                print("\nSetting bookmark in %s at page %i" % (book.get_title(), book.get_bookmark()))
+                print(
+                    "\nSetting bookmark in %s at page %i"
+                    % (book.get_title(), book.get_bookmark())
+                )
         return
 
 
