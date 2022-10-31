@@ -9,10 +9,11 @@
 from zturtle import *
 from graphics import *
 
+
 def drawO(turtle, window):
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth+35,currHeight-40)
+    turtle.moveTo(currWidth + 35, currHeight - 40)
     turtle.setHeading(270)
     for i in range(1200):
         if i % 15 == 0:
@@ -26,24 +27,23 @@ def drawO(turtle, window):
 def drawL(turtle):
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth+35,currHeight)
+    turtle.moveTo(currWidth + 35, currHeight)
     turtle.setHeading(0)
     turtle.forward(50)
     turtle.dot()
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth-50, currHeight)
+    turtle.moveTo(currWidth - 50, currHeight)
     turtle.turn(90)
     turtle.forward(-100)
     turtle.dot()
     turtle.moveTo(currWidth, currHeight)
 
 
-
 def drawE(turtle):
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth+35,currHeight)
+    turtle.moveTo(currWidth + 35, currHeight)
     turtle.setHeading(90)
     turtle.dot()
     turtle.forward(-100)
@@ -53,16 +53,17 @@ def drawE(turtle):
     turtle.dot()
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth, currHeight+50)
+    turtle.moveTo(currWidth, currHeight + 50)
     turtle.dot()
     turtle.setHeading(180)
     turtle.forward(35)
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth, currHeight+50)
+    turtle.moveTo(currWidth, currHeight + 50)
     turtle.turn(180)
     turtle.forward(35)
     turtle.dot()
+
 
 def drawH(turtle):
     turtle.setHeading(90)
@@ -72,7 +73,7 @@ def drawH(turtle):
     turtle.dot()
     currWidth = turtle.x
     currHeight = turtle.y
-    turtle.moveTo(currWidth,currHeight-50)
+    turtle.moveTo(currWidth, currHeight - 50)
     turtle.setHeading(0)
     turtle.down()
     turtle.forward(50)

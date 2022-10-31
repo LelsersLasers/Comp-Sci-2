@@ -1,7 +1,7 @@
 """
-	Description: To get movie reviews from a file and check perform sentiment analysis
-		on the words in the review, and show the best and worst words. Uses a
-        list of lists to store the words and their scores
+	Description: To get movie reviews from a file and check perform sentiment
+        analysis on the words in the review, and show the best and worst words.
+        Uses a list of lists to store the words and their scores.
 	Author: Millan
 	Date: 10/20/22
 """
@@ -14,9 +14,9 @@ import time  # for testing the runtime of the program
 
 def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> None:
     """
-    Purpose: Sorts a list (using the Insertion sort algrothrim)
+    Purpose: Sorts a list (using the insertion sort algrothrim)
     Parameters: arr (list) the list to be sorted
-    Return val: None
+    Return val: None (modifies the passed in list)
     """
     for i in range(1, len(arr)):
         val = arr[i]
@@ -33,11 +33,9 @@ def insertion_sort(arr: list[Any], key=lambda x: x, reverse: bool = False) -> No
 def binary_search(arr: list[Any], element: Any, key=lambda x: x):
     """
     Purpose: Finds the desired value in a list
-    Parameters: arr (list) of anything to be searched, element (anything) that
-        is being searched for in the list, key (function) that is used to get the
-        desired value from the list (for example, if the list is a list of lists,
-        the key will get the desired value from the list to be searching for). key
-        is defaulted to just returning the value without anything special.
+    Parameters: arr (list) to be searched, element (Any) that is being searched
+        for in the list, key (optional function) a transform applied to the items
+        in the list but not the element being searched for
     Return val: the index (int) of the found value, or the negative index of the
         insertion point + 1
     """

@@ -16,12 +16,12 @@ def main():
     while True:
         # get current time and display clock
         time = digClock.getTime()
-        clockText = Text(Point(width/2, height/2), time)
+        clockText = Text(Point(width / 2, height / 2), time)
         clockText.setSize(36)
         clockText.setOutline("green")
         clockText.draw(gw)
 
-        sleep(1)        # sleep for 1 second and tick the clock forward one sec
+        sleep(1)  # sleep for 1 second and tick the clock forward one sec
         digClock.tick()
 
         clockText.undraw()  # undraw old time, so can display the new time
@@ -30,6 +30,7 @@ def main():
             break
 
     gw.close()
+
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,7 @@ from alarmclock import *
 from time import sleep
 from os.path import isfile
 
+
 def main():
     width = 300
     height = 100
@@ -20,12 +21,12 @@ def main():
     while True:
         # get current time and display clock
         time = digClock.getTime()
-        clockText = Text(Point(width/2, height/2), time)
+        clockText = Text(Point(width / 2, height / 2), time)
         clockText.setSize(36)
         clockText.setOutline("green")
         clockText.draw(gw)
 
-        sleep(0.9)        # sleep for 1 second and tick the clock forward one sec
+        sleep(0.9)  # sleep for 1 second and tick the clock forward one sec
         if digClock.tick() and digClock.getSec() % 2 == 0:
             gw.setBackground("red")
         else:
@@ -37,6 +38,7 @@ def main():
             break
 
     gw.close()
+
 
 if __name__ == "__main__":
     main()

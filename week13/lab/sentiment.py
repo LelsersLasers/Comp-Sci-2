@@ -1,7 +1,7 @@
 """
 	Description: To get movie reviews from a file and check perform sentiment
         analysis on the words in the review, and show the best and worst words.
-        Uses a dictionary to store the words and their scores
+        Uses a dictionary to store the words and their scores.
 	Author: Millan
 	Date: 10/20/22
 """
@@ -37,7 +37,7 @@ def binary_search(arr: list[Any], element: Any, key=lambda x: x):
     Purpose: Finds the desired value in a list
     Parameters: arr (list) to be searched, element (Any) that is being searched
         for in the list, key (optional function) a transform applied to the items
-        in the list but not the element being search for
+        in the list but not the element being searched for
     Return val: the index (int) of the found value, or the negative index of the
         insertion point + 1
     """
