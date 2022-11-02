@@ -44,7 +44,7 @@ def get_pos_int(prompt: str, low: int = None, high: int = None) -> int:
         try:
             num = int(user_input)
             if low != None:
-                assert num >= None
+                assert num >= low
             if high != None:
                 assert num <= high
             return num
