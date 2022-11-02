@@ -15,7 +15,7 @@ def find_files(path: str, pattern: str) -> None:
     Parameters: the base path to search from (str), the pattern to match (str)
     Return Val: None
     """
-    try:
+    try: # TODO: try is in wrong place?
         files = listdir(path)
         for f in files:
             # check if dir first, so we don't print names of folders
@@ -26,17 +26,18 @@ def find_files(path: str, pattern: str) -> None:
                 print(full_path)
     except PermissionError:
         print("Access is denied: '%s'" % path)
+    return
 
 
-def get_path() -> str:
+def get_path(prompt: str) -> str:
     """
     Purpose: gets a valid path from the user
-    Parameters: None
+    Parameters: Prompt (str) is the prompt to display to the user
     Return Val: a valid path that already has '~' expanded (str)
     """
     while True:
-        path = input("Path   : ")
-        # does nothing if "~" not in path (so no need to check if it is)
+        path = input(prompt)
+        # TODO: does nothing if "~" not in path (so no need to check if it is)
         expanded_path = expanduser(path)
         if isdir(expanded_path):
             return expanded_path
@@ -45,7 +46,7 @@ def get_path() -> str:
 
 
 def main():
-    expanded_path = get_path()
+    expanded_path = get_path("Path   : ")
     pattern = input("Pattern: ")
 
     print("")

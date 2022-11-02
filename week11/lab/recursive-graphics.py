@@ -58,6 +58,8 @@ def draw_flower(
     pygame.draw.circle(win, "#EBCB8B", pt, size)
     pygame.draw.circle(win, "#4C566A", pt, size, 1)
 
+    return
+
 
 def recursive_flower(
     win: pygame.surface.Surface, pt: tuple[float, float], size: float, depth: int
@@ -113,9 +115,9 @@ def main():
     # pygame event/redraw loop
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or event.type == pygame.MOUSEBUTTONDOWN:
                 return
-
+        
         win.fill("#2E3440")
         recursive_flower(win, starting_pt, starting_size, max_depth)
         pygame.display.update()

@@ -1,5 +1,6 @@
 """
-	Description: Repeats all the characters in a text based on how many times the user wants
+	Description: Repeats all the characters in a text based on how many times the
+        user wants
 	Author: Millan
 	Date: 9/20/22
 """
@@ -31,7 +32,6 @@ def silly_text(text: str, num: int) -> str:
         return multiply_str(text[0], num) + silly_text(text[1:], num)
 
 
-# prompt low high
 def get_pos_int(prompt: str, low: int = None, high: int = None) -> int:
     """
     Purpose: gets a positive integer from the user
