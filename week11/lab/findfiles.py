@@ -37,7 +37,10 @@ def get_path(prompt: str) -> str:
     """
     while True:
         path = input(prompt)
-        # TODO: does nothing if "~" not in path (so no need to check if it is)
+        # Question: expanduser does nothing if "~" not in path,
+        #   so there should be no need to check if it is.
+        #   This also removes the need for extra string concatenation
+        #   and if/try statements.
         expanded_path = expanduser(path)
         if isdir(expanded_path):
             return expanded_path
