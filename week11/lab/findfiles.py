@@ -15,7 +15,7 @@ def find_files(path: str, pattern: str) -> None:
     Parameters: the base path to search from (str), the pattern to match (str)
     Return Val: None
     """
-    try: # TODO: try is in wrong place?
+    try: # Question: try is in wrong place?
         files = listdir(path)
         for f in files:
             # check if dir first, so we don't print names of folders
