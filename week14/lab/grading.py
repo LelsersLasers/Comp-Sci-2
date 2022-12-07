@@ -1,7 +1,7 @@
 """
-	Description: User interface for gradebook.py
-	Authors: Millan and Jerry
-	Date: 12/9/22
+    Description: User interface for gradebook.py
+    Authors: Millan and Jerry
+    Date: 12/9/22
 """
 
 import gradebook
@@ -181,6 +181,15 @@ def getAssignmentGrades() -> bool:
     Prompts for an assignment and prints all the grades matching the assignment title
     Always returns true (exit will never be requested from here)
     """
+
+    """
+    TODO:
+        - prompt valid section
+        - print assignments for section
+        - prompt for assignment
+        - print assignments matching title sorted by student last name
+    """
+
     showAssignments()
 
     valid = False
