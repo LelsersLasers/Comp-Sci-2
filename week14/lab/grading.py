@@ -171,7 +171,7 @@ def getStudentReport() -> bool:
             print("\nInvalid ID: please enter a valid ID")
 
     grade = student.gradeReport() * 100
-    print(f"Overall grade: {grade:..2f}")
+    print(f"Overall grade: {grade:.2f}")
 
     return True
 
