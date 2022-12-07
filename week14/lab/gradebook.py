@@ -216,9 +216,6 @@ class Assignment:
         if len(Section.sections) == 0:
             print("No sections to add a grade to")
             return None
-        elif len(Student.students) == 0:
-            print("No students to add a grade for")
-            return None
 
         print("Sections:")
         for section in Section.sections:
@@ -237,7 +234,7 @@ class Assignment:
             else:
                 invalidSection = False
 
-        print("\nStudents")
+        print("\nStudents:")
         for student in section.studentList:
             print(str(student))
 
@@ -249,8 +246,8 @@ class Assignment:
             if userStudentID == 0:
                 return None
             student = Student.getStudentFromID(userStudentID)
-            if student is None:
-                print(f"No student matching ID: {userStudentID}")
+            if student is None or student not in section.studentList:
+                print(f"No student matching ID: {userStudentID} found in the section")
             else:
                 invalidStudentID = False
 
