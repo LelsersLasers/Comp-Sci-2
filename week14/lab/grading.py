@@ -29,19 +29,19 @@ def addStudent() -> bool:
 
     while not valid:
         sectionID = gradebook.getValidInt(
-            "Section ID (0 to skip): ", 0, gradebook.Section.nextID - 1
+            "Section ID to add student to (0 to skip): ", 0, gradebook.Section.nextID - 1
         )
-
         if sectionID == 0:
             break
-
         section = gradebook.Section.getSectionFromID(sectionID)
         if section is not None:
             valid = True
         else:
             print("\nInvalid ID: please enter a valid ID")
-        section.addStudentByName(student.firstName, student.lastName)
-        print(f"Added {str(student)} to {str(section)}")
+
+    section.addStudentByName(student.firstName, student.lastName)
+    print(f"Added {str(student)} to {str(section)}")
+
     return True
 
 
@@ -128,10 +128,11 @@ def addStudentsToSection() -> bool:
                 valid = True
             else:
                 print("\nInvalid ID: please enter a valid ID")
-            section.addStudentByName(student.firstName, student.lastName)
-            userContinue = input("Continue adding (y/n): ")
-            if userContinue[0].lower() == "n":
-                return True
+
+        section.addStudentByName(student.firstName, student.lastName)
+        userContinue = input("Continue adding (y/n): ")
+        if userContinue[0].lower() == "n":
+            return True
 
     return True
 
