@@ -23,9 +23,9 @@ gradebook = {
 
 class Student:
     """
-	Does not contain the assignments/grades/sections
-	instead those 'link' to the studentID
-	"""
+    Does not contain the assignments/grades/sections
+    instead those 'link' to the studentID
+    """
 
     nextID: int = 1
     students: list[Student] = []
@@ -142,7 +142,7 @@ class Section:
             id = getValidInt(
                 "\nID (0 to not add student): ", min=0, max=Student.nextID - 1
             )
-            if (id == 0):
+            if id == 0:
                 return
             student = Student.getStudentFromID(id)
             if student is not None:
@@ -247,13 +247,13 @@ class Assignment:
                 return None
             student = Student.getStudentFromID(userStudentID)
             if student is None or student not in section.studentList:
-                print(f"No student matching ID: {userStudentID} found in the section")
+                print(
+                    f"No student matching ID: {userStudentID} found in the section"
+                )
             else:
                 invalidStudentID = False
 
-        userScore = getValidInt(
-            "Enter the grade: ", min=0
-        )  # no negative grades
+        userScore = getValidInt("Enter the grade: ", min=0)  # no negative grades
 
         return cls(userStudentID, userSectionID, title, userScore, outOf)
 
@@ -374,9 +374,7 @@ def saveGradebook(filename: str) -> None:
         pickle.dump(gradebook, outfile)
 
 
-def getValidInt(
-    prompt: str, min: int | None = None, max: int | None = None
-) -> int:
+def getValidInt(prompt: str, min: int | None = None, max: int | None = None) -> int:
     """Prompts user and returns an integer between (max and min (both inclusive)"""
     while True:
         userInt = input(prompt)

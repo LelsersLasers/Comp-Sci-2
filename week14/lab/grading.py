@@ -178,34 +178,54 @@ def getStudentReport() -> bool:
 
 def getAssignmentGrades() -> bool:
     """
-    Prompts for an assignment and prints all the grades matching the assignment title
+    Prompts for a section then an assignment from the section and prints all
+        assignments matching the assignment title
     Always returns true (exit will never be requested from here)
     """
 
-    """
-    TODO:
-        - prompt valid section
-        - print assignments for section
-        - prompt for assignment
-        - print assignments matching title sorted by student last name
-    """
+    # if there are assignments, there has to be at least one section
+    if len(gradebook.Assignment.assignments) == 0:
+        print("\nNo assignments in the gradebook")
+        return True
 
-    showAssignments()
+    showSections()
+    validSection = False
+    while not validSection:
+        sectionID = gradebook.getValidInt(
+            "Section ID (0 to stop): ", 0, gradebook.Section.nextID - 1
+        )
+        if sectionID == 0:
+            return True
+        section = gradebook.Section.getSectionFromID(sectionID)
+        if section is not None:
+            validSection = True
+        else:
+            print("\nInvalid ID: please enter a valid ID")
 
-    valid = False
-    while not valid:
+    sectionAssignments = [
+        assignment
+        for assignment in gradebook.Assignment.assignments
+        if assignment.sectionID == section.sectionID
+    ]
+    print(f"\nAssignments for {str(section)}:")
+    for assignment in sectionAssignments:
+        print(str(assignment))
+
+    validAssignment = False
+    while not validAssignment:
         assignmentID = gradebook.getValidInt(
             "Assignment ID (0 to stop): ", 0, gradebook.Assignment.nextID - 1
         )
         if assignmentID == 0:
-            break
+            return True
         assignment = gradebook.Assignment.getAssignmentFromID(assignmentID)
         if assignment is not None:
-            valid = True
+            validAssignment = True
         else:
             print("\nInvalid ID: please enter a valid ID")
 
     gradebook.showGrades(assignment.title)
+
     return True
 
 
@@ -272,7 +292,7 @@ def quit() -> bool:
 def main():
     running = True
     userInterface = "\n\nOptions:\nAdd Student (0)\nShow Students (1)\nAdd Section (2)\nShow Sections (3)\nAdd Students to Section (4)\nEnter Grades (5)\nGet Student Report (6)\nGet assignment grades in section (7)\nShow Assignments (8)\nModify grades (9)\nSave and Quit (10)\nQuit without saving (11)\n"
-    functions = [
+    functions = [  # all of these return a boolean indicating if the program should continue running
         addStudent,
         showStudents,
         addSection,
