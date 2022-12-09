@@ -269,7 +269,7 @@ def enterGrades(title: str, outOf: int) -> None:
 
 def showGrades(title: str) -> None:
     """Prints all grades matching a title sorted by section and student last name"""
-    print(f"{title} (assignments):")
+    print(f"\n{title} (assignments):\n")
     filteredAssignments = [
         assignment
         for assignment in Assignment.assignments
@@ -282,7 +282,7 @@ def showGrades(title: str) -> None:
         sortedStudents = sorted(
             section.studentList, key=lambda student: student.lastName
         )
-        print(str(section))
+        print(f"\nSection - {str(section)}:")
         for student in sortedStudents:
             for assignment in filteredAssignments:
                 if (
@@ -356,6 +356,7 @@ def loadGradeBook(
         sections = []
         assignments = []
 
+    # make the class lists point to the global lists
     Student.students = students
     Section.sections = sections
     Assignment.assignments = assignments
