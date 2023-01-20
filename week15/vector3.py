@@ -1,7 +1,6 @@
 from __future__ import annotations  # type hint support
 from typing import Iterator
 
-# from numbers import float
 import math
 import pickle
 
@@ -45,7 +44,7 @@ class Vector3:
         elif isinstance(index, str):
             return {"x": self.x, "y": self.y, "z": self.z}[index]
         else:
-            raise TypeError(f"Index must be int or str, not {type(index)}")
+            return NotImplemented
 
     def __setitem__(self, index: int | str, value: float) -> None:
         """Supports access using 0, 1, 2, 'x', 'y', or 'z' as index."""
@@ -69,13 +68,8 @@ class Vector3:
                     self.z = value
                 case _:
                     raise KeyError(f"Key {index} not found")
-
-    def __iter__(self) -> Iterator[float]:
-        """Iterate over the components of the vector."""
-        yield self.x
-        yield self.y
-        yield self.z
-        # TODO: how does '__next__' work?
+        else:
+            return NotImplemented
 
     def __add__(self, other: Vector3) -> Vector3:
         """Component-wise addition"""
@@ -109,6 +103,8 @@ class Vector3:
             return self.x * other.x + self.y * other.y + self.z * other.z
         elif isinstance(other, float):  # scalar multiplication
             return Vector3(self.x * other, self.y * other, self.z * other)
+        else:
+            return NotImplemented
 
     def __rmul__(self, other: float | Vector3) -> float | Vector3:
         """Handles case scalar * Vector3 -> Vector3"""
@@ -144,17 +140,63 @@ class Vector3:
         else:
             return self * (1.0 / abs(self)) # types are actually fine here
 
-    def addMultiple(self, *args: Vector3) -> Vector3:
+    def addMultiple(self, *args: Vector3) -> None:
         """Add multiple vectors to self."""
-        for arg in args:
-            self += arg
-        return self
+        for vec in args:
+            self += vec
 
 
 def main():
     """Test the Vector3 class."""
 
-    ...
+    vec3 = Vector3(1, 2, 3)
+
+    # test __str__
+    assert str(vec3) == "<1, 2, 3>"
+
+    # test __repr__
+    assert repr(vec3) == "Vector3(1, 2, 3)"
+
+    # test __getitem__
+    assert vec3[0] == 1
+    assert vec3[1] == 2
+    assert vec3[2] == 3
+
+    assert vec3["x"] == 1
+    assert vec3["y"] == 2
+    assert vec3["z"] == 3
+
+    # test __setitem__
+    vec3[0] = 4
+    vec3[1] = 5
+    vec3[2] = 6
+
+    assert vec3[0] == 4
+    assert vec3[1] == 5
+    assert vec3[2] == 6
+
+    vec3["x"] = 7
+    vec3["y"] = 8
+    vec3["z"] = 9
+
+    assert vec3["x"] == 7
+    assert vec3["y"] == 8
+    assert vec3["z"] == 9
+
+    # test __mul__(float)
+    assert vec3 * 2.0 == Vector3(14, 16, 18)
+    assert 2.0 * vec3 == Vector3(14, 16, 18)
+
+
+    otherVec3 = Vector3(1, 2, 3)
+
+    # test __mul__(Vector3)
+    assert vec3 * otherVec3 == 50
+    assert otherVec3 * vec3 == 50
+
+    # test __matmul__
+    assert vec3 @ otherVec3 == Vector3(6, -12, 6)
+    assert otherVec3 @ vec3 == Vector3(-6, 12, -6)
 
 if __name__ == "__main__":
     main()
