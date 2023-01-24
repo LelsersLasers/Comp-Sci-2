@@ -1,12 +1,17 @@
-from __future__ import annotations  # type hint support
-from typing import Iterator
+"""
+Description: 3D mathmatical vector class and brief testing
+Names: Millan and Jerry 
+Date: 1/24/23
+"""
 
+from __future__ import annotations  # type hint support
 import math
 import pickle
 
 
 class Vector3:
     """Represents a mathmatical 3D vector"""
+
     def __init__(self, x: float = 0.0, y: float = 0.0, z: float = 0.0):
         """Initialize self. See help(type(self)) for accurate signature."""
         self.x = x
@@ -138,7 +143,7 @@ class Vector3:
         if length == 0:
             return +self  # '+' is used here to make a copy
         else:
-            return self * (1.0 / abs(self)) # types are actually fine here
+            return self * (1.0 / abs(self))  # types are actually fine here
 
     def addMultiple(self, *args: Vector3) -> None:
         """Add multiple vectors to self."""
@@ -187,7 +192,6 @@ def main():
     assert vec3 * 2.0 == Vector3(14, 16, 18)
     assert 2.0 * vec3 == Vector3(14, 16, 18)
 
-
     otherVec3 = Vector3(1, 2, 3)
 
     # test __mul__(Vector3)
@@ -197,6 +201,7 @@ def main():
     # test __matmul__
     assert vec3 @ otherVec3 == Vector3(6, -12, 6)
     assert otherVec3 @ vec3 == Vector3(-6, 12, -6)
+
 
 if __name__ == "__main__":
     main()
