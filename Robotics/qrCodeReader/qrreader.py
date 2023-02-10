@@ -14,26 +14,28 @@ def readQRCode(imagePath: str) -> str | None:
 		Reads the QR code in the image at the given path.
 		Returns the contents of the QR code.
 		Returns None if the QR code could not be read.
+
+		Only works if there is 1 or 0 QR codes in the image.
 	"""
 	try:
-		# Run the zbarimg command to read the QR code
 		output = subprocess.check_output(
 			["zbarimg", imagePath],
-			stderr=subprocess.STDOUT
+			stderr=subprocess.STDOUT # hides output of zbarimg
 		)
-		# Get the contents of the QR code
+
 		stringOutput = output.decode("utf-8").strip()
 
 		firstLine = stringOutput.split("\n")[0].strip()
 		parts = firstLine.split(":")
 		linkParts = parts[1:]
 		return "".join(linkParts)
-	except subprocess.CalledProcessError: # better to just let it throw?
+
+	except subprocess.CalledProcessError:
 		return None
 
 if __name__ == '__main__':
-	args = sys.argv[1:]
+	paths = sys.argv[1:]
 
-	for arg in args:
-		qrCode = readQRCode(arg)
-		print(f"QR Code in {arg}: {qrCode}")
+	for path in paths:
+		qrCode = readQRCode(path)
+		print(f"QR Code in {path}: {qrCode}")
