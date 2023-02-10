@@ -64,6 +64,29 @@ void printScores(string name, int playerWins, int computerWins) {
 	std::cout << "---------------------------------" << std::endl;
 }
 
+void round(int* playerWins, int* computerWins, string name) {
+	Move playerMove = getChoice();
+	Move computerMove = Move(rand() % 3);
+
+	std::cout << name << " picks " << moveToString(playerMove) << " and computer picks " << moveToString(computerMove) << std::endl;
+
+	Result winner = calculateWinner(playerMove, computerMove);
+
+	switch (winner) {
+		case Result::PLAYER1:
+			std::cout << "... " << name << " wins!" << std::endl;
+			(*playerWins)++;
+			break;
+		case Result::PLAYER2:
+			std::cout << "... Computer wins!" << std::endl;
+			(*computerWins)++;
+			break;
+		case Result::TIE:
+			std::cout << "... A tie." << std::endl;
+			break;
+	}
+}
+
 
 int main() {
 
@@ -92,29 +115,7 @@ int main() {
 
 		std::cout << std::endl;
 
-		Move playerMove = getChoice();
-		Move computerMove = Move(rand() % 3);
-
-		std::cout << name << " picks " << moveToString(playerMove) << " and computer picks " << moveToString(computerMove) << std::endl;
-
-		Result winner = calculateWinner(playerMove, computerMove);
-
-		games++;
-
-		switch (winner) {
-			case Result::PLAYER1:
-				std::cout << "... " << name << " wins!" << std::endl;
-				playerWins++;
-				break;
-			case Result::PLAYER2:
-				std::cout << "... Computer wins!" << std::endl;
-				computerWins++;
-				break;
-			case Result::TIE:
-				std::cout << "... A tie." << std::endl;
-				break;
-		}
-
+		round(&playerWins, &computerWins, name);
 		printScores(name, playerWins, computerWins);
 
 		games++;
