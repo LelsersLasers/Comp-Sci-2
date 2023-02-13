@@ -1,30 +1,37 @@
+/*
+	Description: This program will take a year from the user and print out whether
+		it is a leap year or not.
+    Author: Millan Kumar
+    Date: Febuary 17, 2023
+*/
+
 #include <iostream>
 #include <string>
 
-using std::string;
+using namespace std;
 
 
 int main() {
 
-	std::cout << "Enter a year: ";
+	cout << "Enter a year: ";
 
 	int year;
-	std::cin >> year;
+	cin >> year;
 
 	// if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-	// 	std::cout << year << " is a leap year." << std::endl;
+	// 	cout << year << " is a leap year." << endl;
 	// } else {
-	// 	std::cout << year << " is not a leap year." << std::endl;
+	// 	cout << year << " is not a leap year." << endl;
 	// }
 
 	if (year % 400 == 0) {
-		std::cout << year << " is a leap year." << std::endl;
+		cout << year << " is a leap year." << endl;
 	} else if (year % 100 == 0) {
-		std::cout << year << " is not a leap year." << std::endl;
+		cout << year << " is not a leap year." << endl;
 	} else if (year % 4 == 0) {
-		std::cout << year << " is a leap year." << std::endl;
+		cout << year << " is a leap year." << endl;
 	} else {
-		std::cout << year << " is not a leap year." << std::endl;
+		cout << year << " is not a leap year." << endl;
 	}
 
 

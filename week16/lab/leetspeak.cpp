@@ -1,15 +1,22 @@
+/*
+	Description: This program will take a string from the user and print it out
+		with the characters 'e', 'l', and 's' replaced with 3, 1, and 5 respectively.
+    Author: Millan Kumar
+    Date: Febuary 17, 2023
+*/
+
 #include <iostream>
 #include <string>
 
-using std::string;
+using namespace std;
 
 
 int main() {
 
-	std::cout << "Enter string: ";
+	cout << "Enter string: ";
 
 	string text;
-	std::getline(std::cin, text);
+	getline(cin, text);
 
 	string leetedString = "";
 
@@ -31,7 +38,7 @@ int main() {
 				leetedString += c;
 		}
 	}
-	std::cout << "Leet version: " << leetedString << std::endl;
+	cout << "Leet version: " << leetedString << endl;
 
 
 	return 0;

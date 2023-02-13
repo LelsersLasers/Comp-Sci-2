@@ -1,14 +1,23 @@
+/*
+	Description: Play rock, paper, scissors against the computer.
+    Author: Millan Kumar
+    Date: Febuary 17, 2023
+*/
+
 #include <iostream>
 #include <ctime>		// time
 #include <string>
 
-using std::string;
+using namespace std;
 
 
-enum Move { ROCK = 0, PAPER = 1, SCISSORS = 2 };
+ // explicit values for easy conversion from int to Move
+enum Move : int { ROCK = 0, PAPER = 1, SCISSORS = 2 };
 enum Result { PLAYER1, PLAYER2, TIE };
 
 string moveToString(Move move) {
+	// convert Move enum to string
+
 	switch (move) {
 		case Move::ROCK:
 			return "rock";
@@ -21,12 +30,14 @@ string moveToString(Move move) {
 }
 
 Move getChoice() {
-	std::cout << "Enter your move (rock, paper, or scissors): ";
+	// gets valid user input
+
+	cout << "Enter your move (rock, paper, or scissors): ";
 
 	string choice;
-	std::getline(std::cin, choice);
+	getline(cin, choice);
 
-	// string[string.length()] = '\0' - will go to default case
+	// string[string.length()] = '\0' (will go to default case)
 	switch (choice[0]) {
 		case 'r':
 		case 'R':
@@ -38,13 +49,15 @@ Move getChoice() {
 		case 'S':
 			return Move::SCISSORS;
 		default:
-			std::cout << "Invalid choice." << std::endl;
+			cout << "Invalid choice." << endl;
 			return getChoice();
 	}
 }
 
 
 Result calculateWinner(Move p1, Move p2) {
+	// returns the winner of the round
+
 	Move winList[3] = { ROCK, PAPER, SCISSORS };
 	Move loseList[3] = { SCISSORS, ROCK, PAPER };
 
@@ -59,32 +72,45 @@ Result calculateWinner(Move p1, Move p2) {
 }
 
 void printScores(string name, int playerWins, int computerWins) {
-	std::cout << "---------------------------------" << std::endl;
-	std::cout << name << ": " << playerWins << "\tComputer: " <<  computerWins << std::endl;
-	std::cout << "---------------------------------" << std::endl;
+	// prints the current scores
+
+	cout << "---------------------------------" << endl;
+	cout << name << ": " << playerWins << "\tComputer: " <<  computerWins << endl;
+	cout << "---------------------------------" << endl;
 }
 
-void round(int* playerWins, int* computerWins, string name) {
+void round(int& playerWins, int& computerWins, string name) {
+	/*
+		plays a round of rock-paper-scissors (gets user input, generates computer move, calculates winner)
+		Note: updates playerWins and computerWins
+	*/
+
+
 	Move playerMove = getChoice();
 	Move computerMove = Move(rand() % 3);
 
-	std::cout << name << " picks " << moveToString(playerMove) << " and computer picks " << moveToString(computerMove) << std::endl;
+	cout << name << " picks " << moveToString(playerMove) << " and computer picks " << moveToString(computerMove) << endl;
 
 	Result winner = calculateWinner(playerMove, computerMove);
 
 	switch (winner) {
 		case Result::PLAYER1:
-			std::cout << "... " << name << " wins!" << std::endl;
-			(*playerWins)++;
+			cout << "... " << name << " wins!" << endl;
+			playerWins++;
 			break;
 		case Result::PLAYER2:
-			std::cout << "... Computer wins!" << std::endl;
-			(*computerWins)++;
+			cout << "... Computer wins!" << endl;
+			computerWins++;
 			break;
 		case Result::TIE:
-			std::cout << "... A tie." << std::endl;
+			cout << "... A tie." << endl;
 			break;
 	}
+}
+
+void printWinner(string winner, string loser, int wins, int games) {
+	// prints the winner of the game
+	cout << endl << winner << " beat " << loser << ":\n... won " << wins << " games in " << games << " rounds of rock-paper-scissors." << endl;
 }
 
 
@@ -97,34 +123,34 @@ int main() {
 
 	int games = 0;
 
-	std::cout << "What is your name? ";
+	cout << "What is your name? ";
 	string name;
-	std::getline(std::cin, name);
+	getline(cin, name);
 
-	std::cout << "How many wins should we play until? ";
+	cout << "How many wins should we play until? ";
 	int numWins;
-	std::cin >> numWins;
+	cin >> numWins;
 
 	// FLUSH CIN BUFFER???
 	string _;
-	std::getline(std::cin, _);
+	getline(cin, _);
 
-	std::cout << "Let’s see who can win " << numWins << " games first! Good luck." << std::endl;
+	cout << "Let’s see who can win " << numWins << " games first! Good luck." << endl;
 
 	while (playerWins < numWins && computerWins < numWins) {
 
-		std::cout << std::endl;
+		cout << endl;
 
-		round(&playerWins, &computerWins, name);
+		round(playerWins, computerWins, name);
 		printScores(name, playerWins, computerWins);
 
 		games++;
 	}
 
 	if (playerWins > computerWins) {
-		std::cout << "\n" << name << " beat the computer:\n... won " << playerWins << " games in " << games << " rounds of rock-paper-scissors." << std::endl;
+		printWinner(name, "the computer", playerWins, games);
 	} else {
-		std::cout << "\nThe computer beat " << name << ":\n... won " << computerWins << " games in " << games << " rounds of rock-paper-scissors." << std::endl;
+		printWinner("the computer", name, computerWins, games);
 	}
 
 
