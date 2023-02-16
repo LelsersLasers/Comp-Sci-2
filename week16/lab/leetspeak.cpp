@@ -18,7 +18,7 @@ int main() {
 	string text;
 	getline(cin, text);
 
-	cout << "Leet vesion: ";
+	cout << "Leet version: ";
 
 	for (char& c : text) {
 		switch (c) {
