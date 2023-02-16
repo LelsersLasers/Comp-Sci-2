@@ -18,27 +18,27 @@ int main() {
 	string text;
 	getline(cin, text);
 
-	string leetedString = "";
+	cout << "Leet vesion: ";
 
 	for (char& c : text) {
 		switch (c) {
 			case 'e':
 			case 'E':
-				leetedString += "3";
+				cout << '3';
 				break;
 			case 'l':
 			case 'L':
-				leetedString += "1";
+				cout << '1';
 				break;
 			case 's':
 			case 'S':
-				leetedString += "5";
+				cout << '5';
 				break;
 			default:
-				leetedString += c;
+				cout << c;
 		}
 	}
-	cout << "Leet version: " << leetedString << endl;
+	cout << endl;
 
 
 	return 0;

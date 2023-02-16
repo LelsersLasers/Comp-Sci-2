@@ -11,12 +11,12 @@
 using namespace std;
 
 
- // explicit values for easy conversion from int to Move
+// explicit values for easy conversion from a random int to to Move
 enum Move : int { ROCK = 0, PAPER = 1, SCISSORS = 2 };
 enum Result { PLAYER1, PLAYER2, TIE };
 
 string moveToString(Move move) {
-	// convert Move enum to string
+	// Convert Move enum to string
 
 	switch (move) {
 		case Move::ROCK:
@@ -30,14 +30,14 @@ string moveToString(Move move) {
 }
 
 Move getChoice() {
-	// gets valid user input
+	// Gets valid user input
 
 	cout << "Enter your move (rock, paper, or scissors): ";
 
 	string choice;
 	getline(cin, choice);
 
-	// string[string.length()] = '\0' (will go to default case)
+	// Note: string[string.length()] = '\0' (will go to default case)
 	switch (choice[0]) {
 		case 'r':
 		case 'R':
@@ -56,7 +56,7 @@ Move getChoice() {
 
 
 Result calculateWinner(Move p1, Move p2) {
-	// returns the winner of the round
+	// Returns the winner of the round
 
 	Move winList[3] = { ROCK, PAPER, SCISSORS };
 	Move loseList[3] = { SCISSORS, ROCK, PAPER };
@@ -72,7 +72,7 @@ Result calculateWinner(Move p1, Move p2) {
 }
 
 void printScores(string name, int playerWins, int computerWins) {
-	// prints the current scores
+	// Prints the current scores
 
 	cout << "---------------------------------" << endl;
 	cout << name << ": " << playerWins << "\tComputer: " <<  computerWins << endl;
@@ -81,10 +81,9 @@ void printScores(string name, int playerWins, int computerWins) {
 
 void round(int& playerWins, int& computerWins, string name) {
 	/*
-		plays a round of rock-paper-scissors (gets user input, generates computer move, calculates winner)
+		Plays a round of rock-paper-scissors (gets user input, generates computer move, calculates winner)
 		Note: updates playerWins and computerWins
 	*/
-
 
 	Move playerMove = getChoice();
 	Move computerMove = Move(rand() % 3);
@@ -92,7 +91,6 @@ void round(int& playerWins, int& computerWins, string name) {
 	cout << name << " picks " << moveToString(playerMove) << " and computer picks " << moveToString(computerMove) << endl;
 
 	Result winner = calculateWinner(playerMove, computerMove);
-
 	switch (winner) {
 		case Result::PLAYER1:
 			cout << "... " << name << " wins!" << endl;
@@ -109,8 +107,10 @@ void round(int& playerWins, int& computerWins, string name) {
 }
 
 void printWinner(string winner, string loser, int wins, int games) {
-	// prints the winner of the game
-	cout << endl << winner << " beat " << loser << ":\n... won " << wins << " games in " << games << " rounds of rock-paper-scissors." << endl;
+	// Prints the winner of the whole game
+
+	cout << endl << winner << " beat " << loser << ":" << endl;
+	cout << "... won " << wins << " games in " << games << " rounds of rock-paper-scissors." << endl;
 }
 
 
@@ -141,7 +141,7 @@ int main() {
 
 		cout << endl;
 
-		round(playerWins, computerWins, name);
+		round(playerWins, computerWins, name); // modifes playerWins and computerWins
 		printScores(name, playerWins, computerWins);
 
 		games++;
@@ -150,9 +150,8 @@ int main() {
 	if (playerWins > computerWins) {
 		printWinner(name, "the computer", playerWins, games);
 	} else {
-		printWinner("the computer", name, computerWins, games);
+		printWinner("The computer", name, computerWins, games);
 	}
-
 
 
 	return 0;
