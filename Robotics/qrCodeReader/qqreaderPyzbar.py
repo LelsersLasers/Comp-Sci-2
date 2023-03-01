@@ -1,8 +1,3 @@
-"""
-	Requires the following OS packages:
-		- zbar (ran with 'zbarimg' command)
-"""
-
 from __future__ import annotations
 
 import cv2
