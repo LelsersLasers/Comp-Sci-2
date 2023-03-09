@@ -19,10 +19,6 @@ else:
 time.sleep(1)
 
 
-start = time.time()
-delta = 1.0
-
-
 while True:
 
     ret, frame = cap.read()
@@ -37,19 +33,8 @@ while True:
 
     if len(links) > 0:
         print(f"QR Code(s): {links}")
-    
-
-    delta = time.time() - start
-    fps = 1 / delta
-    start = time.time()
-
-    print(f"FPS: {fps:.2f}\tDelta: {(delta * 1000):.2f} ms")
-    print()
-
 
     cv2.imshow("Camera Feed", frame)
-
-
 
     if cv2.waitKey(1) == ord("q"):
         break
