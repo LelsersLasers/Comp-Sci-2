@@ -1,10 +1,15 @@
+/*
+	Description: Play connect 4! Now with AI!
+  Author: Millan & Jerry
+  Date: March 9, 2023
+*/
 #include <iostream>
 
-#include <climits>
-#include <fstream>
+#include <climits> // INT_MIN, INT_MAX for minimax
+#include <fstream> // file reading and writing
 #include <tuple>
 #include <utility> // pair
-#include <vector>
+#include <vector> // python like lists for minimax
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -16,8 +21,12 @@ using std::vector;
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
-void clearScreen() { system("clear"); }
+void clearScreen() {
+	// "clear" is specific to linux/mac
+	system("clear");
+}
 
+// Empty first so it is the default
 enum Spot { Empty, X, O };
 
 char spotToChar(Spot spot, bool writingToFile = false) {
@@ -28,6 +37,7 @@ char spotToChar(Spot spot, bool writingToFile = false) {
     return 'O';
   default:
     if (writingToFile) {
+			// spaces in file (at the end of lines) get trimmed
       return '+';
     } else {
       return ' ';
@@ -48,6 +58,7 @@ Spot charToSpot(char c) {
 }
 
 Spot nextTurn(Spot spot) {
+	// toggles between X and 0
   switch (spot) {
   case Spot::X:
     return Spot::O;
@@ -58,38 +69,45 @@ Spot nextTurn(Spot spot) {
   }
 }
 
+// explicit int values used when reading/writing to file
 enum ControlOptions : int { Person = 0, Easy = 1, Hard = 2 };
 
+// Game info
 struct Board {
   Spot grid[BOARD_WIDTH][BOARD_HEIGHT];
   bool notFilledColumn[BOARD_WIDTH];
   Spot turn;
 };
 
+// function declarations because they are needed in different spots
 int bestMove(Board *board);
 int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 
-void dropSpot(Board *board, int row) {
+void dropSpot(Board *board, int col) {
   // assumes row is not full
   for (int y = 0; y < BOARD_HEIGHT; y++) {
-    if (board->grid[row][y] == Spot::Empty) {
-      board->grid[row][y] = board->turn;
+    if (board->grid[col][y] == Spot::Empty) {
+      board->grid[col][y] = board->turn;
       break;
     }
   }
 }
 
-void undoMove(Board *board, int row) {
+void undoMove(Board *board, int col) {
+	// replace top of a column with empty
   for (int y = BOARD_HEIGHT - 1; y >= 0; y--) {
-    if (board->grid[row][y] != Spot::Empty) {
-      board->grid[row][y] = Spot::Empty;
+    if (board->grid[col][y] != Spot::Empty) {
+      board->grid[col][y] = Spot::Empty;
       break;
     }
   }
 }
 
 int getMove(Board *board, ControlOptions player) {
-  int col = 0;
+	// gets a valid open column based on the ControlOption
+	// assumes board is not filled
+	
+  int col = 0; // default value to avoid warning
   switch (player) {
   case ControlOptions::Person:
     std::cout << "Choose column to place piece: ";
@@ -116,13 +134,15 @@ int getMove(Board *board, ControlOptions player) {
 }
 
 void updateFilledColumns(Board *board) {
+	// if the top of a column is empty, you can place a piece there
   for (int x = 0; x < BOARD_WIDTH; x++) {
     board->notFilledColumn[x] = board->grid[x][BOARD_HEIGHT - 1] == Spot::Empty;
   }
 }
 
 void move(Board *board, ControlOptions player) {
-
+	// gets and makes a move and updates the boards columns
+	
   int col = getMove(board, player);
   dropSpot(board, col);
 
@@ -130,6 +150,7 @@ void move(Board *board, ControlOptions player) {
 }
 
 bool boardFilled(Board *board) {
+	// true if there are no valid moves left
   for (int x = 0; x < BOARD_WIDTH; x++) {
     // pointer arithmetic
     if (*(board->notFilledColumn + x)) {
@@ -140,6 +161,8 @@ bool boardFilled(Board *board) {
 }
 
 bool checkWin(Board *board) {
+	// true if someone has won
+	
   // check vertical win
   for (int x = 0; x < BOARD_WIDTH; x++) {
     for (int y = 0; y <= BOARD_HEIGHT - 4; y++) {
@@ -220,7 +243,9 @@ bool checkWin(Board *board) {
 }
 
 void printGame(Board *board) {
-  // clearScreen();
+	// show the game
+	
+  clearScreen();
   std::cout << std::endl;
 
   for (int y = BOARD_HEIGHT - 1; y >= 0; y--) {
@@ -241,6 +266,8 @@ void printGame(Board *board) {
 }
 
 ControlOptions setUpPlayer(int playerNum) {
+	// get control option for a player
+	
   std::cout << "Player " << playerNum << ": [P]erson, [E]asy AI, [H]ard AI? ";
   char playerChar;
   std::cin >> playerChar;
@@ -262,6 +289,8 @@ ControlOptions setUpPlayer(int playerNum) {
 }
 
 pair<ControlOptions, ControlOptions> setUpPlayers() {
+	// get control options for both players
+	
   std::cout << "Player 1 starts (and is 'X's)" << std::endl;
   std::cout << "Player 2 is 'O's\n" << std::endl;
   ControlOptions player1 = setUpPlayer(1);
@@ -271,6 +300,9 @@ pair<ControlOptions, ControlOptions> setUpPlayers() {
 
 void saveGameData(Board *board, ControlOptions player1,
                   ControlOptions player2) {
+	// write game to a file
+	// always uses the same file
+	
   std::ofstream fout("gameSaves.txt", std::ios::trunc);
 
   for (int x = 0; x < BOARD_WIDTH; x++) {
@@ -285,6 +317,9 @@ void saveGameData(Board *board, ControlOptions player1,
 }
 
 tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
+	// if there is a save file with an unfinished game, load it
+	// else, create a new game
+	
   std::ifstream saveReader("gameSaves.txt");
   Board board = {{}, {}, Spot::X};
   std::string line;
@@ -336,6 +371,8 @@ tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
 }
 
 vector<int> openMoves(Board *board) {
+	// list of open columns
+	
   vector<int> validMoves = vector<int>();
   for (int i = 0; i < BOARD_WIDTH; i++) {
     if (board->notFilledColumn[i]) {
@@ -346,6 +383,7 @@ vector<int> openMoves(Board *board) {
 }
 
 int bestMove(Board *board) {
+	// minimax to calculate the best move
 
   int bestScore = INT_MIN;
   int bestCol = 0;
@@ -369,6 +407,8 @@ int bestMove(Board *board) {
 }
 
 int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
+	// magic?
+	
   std::cout << "Depth: " << depth << std::endl;
   updateFilledColumns(board);
 
