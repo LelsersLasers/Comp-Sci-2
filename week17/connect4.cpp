@@ -67,7 +67,7 @@ struct Board {
 };
 
 int bestMove(Board *board);
-int minimax(Board *board, int depth, bool isMaximizing);
+int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 
 void dropSpot(Board *board, int row) {
   // assumes row is not full
@@ -355,7 +355,7 @@ int bestMove(Board *board) {
     dropSpot(board, col);
 
     bool isMaximizing = board->turn != Spot::O;
-    int score = minimax(board, 0, isMaximizing);
+    int score = minimax(board, 0, INT_MIN, INT_MAX, isMaximizing);
 
     undoMove(board, col);
     if (score > bestScore) {
@@ -368,7 +368,7 @@ int bestMove(Board *board) {
   return bestCol;
 }
 
-int minimax(Board *board, int depth, bool isMaximizing) {
+int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
   std::cout << "Depth: " << depth << std::endl;
   updateFilledColumns(board);
 
@@ -391,12 +391,18 @@ int minimax(Board *board, int depth, bool isMaximizing) {
       dropSpot(board, col);
 
       board->turn = nextTurn(board->turn);
-      int score = minimax(board, depth + 1, false);
+      int score = minimax(board, depth + 1, a, b, false);
       board->turn = nextTurn(board->turn);
 
       undoMove(board, col);
 
       bestScore = MAX(score, bestScore);
+
+      // b cutoff
+      a = MAX(a, bestScore);
+      if (bestScore >= b) {
+        break;
+      }
     }
     return bestScore;
   } else {
@@ -406,12 +412,18 @@ int minimax(Board *board, int depth, bool isMaximizing) {
       dropSpot(board, col);
 
       board->turn = nextTurn(board->turn);
-      int score = minimax(board, depth + 1, true);
+      int score = minimax(board, depth + 1, a, b, true);
       board->turn = nextTurn(board->turn);
 
       undoMove(board, col);
 
       bestScore = MIN(score, bestScore);
+
+      // a cutoff
+      b = MIN(b, bestScore);
+      if (bestScore <= a) {
+        break;
+      }
     }
     return bestScore;
   }
