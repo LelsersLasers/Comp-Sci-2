@@ -21,7 +21,7 @@ using std::vector;
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
-const int MAX_DEPTH = 4;
+const int MAX_DEPTH = 8;
 
 void clearScreen() {
   // "clear" is specific to linux/mac
@@ -83,7 +83,7 @@ struct Board {
 
 // function declarations because they are needed in different spots
 int bestMove(Board *board);
-int minimax(Board *board, int depth, bool isMaximizing);
+int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 
 void dropSpot(Board *board, int col) {
   // assumes row is not full
@@ -417,7 +417,7 @@ int bestMove(Board *board) {
     board->turn = turn;
     dropSpot(board, col);
 
-    int score = minimax(board, 0, !isMaximizing);
+    int score = minimax(board, 0, INT_MIN, INT_MAX, !isMaximizing);
     // std::cout << "Score[" << col << "]: " << score << std::endl;
 
     undoMove(board, col);
@@ -449,7 +449,7 @@ int bestMove(Board *board) {
   // return bestMoves[0];
 }
 
-int minimax(Board *board, int depth, bool isMaximizing) {
+int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
   // magic?
 
   updateFilledColumns(board);
@@ -482,11 +482,15 @@ int minimax(Board *board, int depth, bool isMaximizing) {
       board->turn = Spot::X;
       dropSpot(board, col);
 
-      int score = minimax(board, depth + 1, false);
+      int score = minimax(board, depth + 1, a, b, false);
 
       undoMove(board, col);
 
       bestScore = MAX(score, bestScore);
+      if (bestScore > b) {
+        break;
+      }
+      a = MAX(a, bestScore);
     }
     return bestScore;
   } else { // minimizing
@@ -498,11 +502,15 @@ int minimax(Board *board, int depth, bool isMaximizing) {
       board->turn = Spot::O;
       dropSpot(board, col);
 
-      int score = minimax(board, depth + 1, true);
+      int score = minimax(board, depth + 1, a, b, true);
 
       undoMove(board, col);
 
       bestScore = MIN(score, bestScore);
+      if (bestScore < a) {
+        break;
+      }
+      b = MIN(b, bestScore);
     }
     return bestScore;
   }
