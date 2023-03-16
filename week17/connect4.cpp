@@ -1,5 +1,5 @@
 /*
-	Description: Play connect 4! Now with AI!
+        Description: Play connect 4! Now with AI!
   Author: Millan & Jerry
   Date: March 9, 2023
 */
@@ -9,7 +9,7 @@
 #include <fstream> // file reading and writing
 #include <tuple>
 #include <utility> // pair
-#include <vector> // python like lists for minimax
+#include <vector>  // python like lists for minimax
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -21,9 +21,11 @@ using std::vector;
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
+const int MAX_DEPTH = 4;
+
 void clearScreen() {
-	// "clear" is specific to linux/mac
-	system("clear");
+  // "clear" is specific to linux/mac
+  system("clear");
 }
 
 // Empty first so it is the default
@@ -37,7 +39,7 @@ char spotToChar(Spot spot, bool writingToFile = false) {
     return 'O';
   default:
     if (writingToFile) {
-			// spaces in file (at the end of lines) get trimmed
+      // spaces in file (at the end of lines) get trimmed
       return '+';
     } else {
       return ' ';
@@ -58,7 +60,7 @@ Spot charToSpot(char c) {
 }
 
 Spot nextTurn(Spot spot) {
-	// toggles between X and 0
+  // toggles between X and 0
   switch (spot) {
   case Spot::X:
     return Spot::O;
@@ -81,7 +83,7 @@ struct Board {
 
 // function declarations because they are needed in different spots
 int bestMove(Board *board);
-int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
+int minimax(Board *board, int depth, bool isMaximizing);
 
 void dropSpot(Board *board, int col) {
   // assumes row is not full
@@ -94,7 +96,7 @@ void dropSpot(Board *board, int col) {
 }
 
 void undoMove(Board *board, int col) {
-	// replace top of a column with empty
+  // replace top of a column with empty
   for (int y = BOARD_HEIGHT - 1; y >= 0; y--) {
     if (board->grid[col][y] != Spot::Empty) {
       board->grid[col][y] = Spot::Empty;
@@ -104,9 +106,9 @@ void undoMove(Board *board, int col) {
 }
 
 int getMove(Board *board, ControlOptions player) {
-	// gets a valid open column based on the ControlOption
-	// assumes board is not filled
-	
+  // gets a valid open column based on the ControlOption
+  // assumes board is not filled
+
   int col = 0; // default value to avoid warning
   switch (player) {
   case ControlOptions::Person:
@@ -134,15 +136,15 @@ int getMove(Board *board, ControlOptions player) {
 }
 
 void updateFilledColumns(Board *board) {
-	// if the top of a column is empty, you can place a piece there
+  // if the top of a column is empty, you can place a piece there
   for (int x = 0; x < BOARD_WIDTH; x++) {
     board->notFilledColumn[x] = board->grid[x][BOARD_HEIGHT - 1] == Spot::Empty;
   }
 }
 
 void move(Board *board, ControlOptions player) {
-	// gets and makes a move and updates the boards columns
-	
+  // gets and makes a move and updates the boards columns
+
   int col = getMove(board, player);
   dropSpot(board, col);
 
@@ -150,7 +152,7 @@ void move(Board *board, ControlOptions player) {
 }
 
 bool boardFilled(Board *board) {
-	// true if there are no valid moves left
+  // true if there are no valid moves left
   for (int x = 0; x < BOARD_WIDTH; x++) {
     // pointer arithmetic
     if (*(board->notFilledColumn + x)) {
@@ -161,8 +163,8 @@ bool boardFilled(Board *board) {
 }
 
 bool checkWin(Board *board) {
-	// true if someone has won
-	
+  // true if someone has won
+
   // check vertical win
   for (int x = 0; x < BOARD_WIDTH; x++) {
     for (int y = 0; y <= BOARD_HEIGHT - 4; y++) {
@@ -243,8 +245,8 @@ bool checkWin(Board *board) {
 }
 
 void printGame(Board *board) {
-	// show the game
-	
+  // show the game
+
   clearScreen();
   std::cout << std::endl;
 
@@ -266,8 +268,8 @@ void printGame(Board *board) {
 }
 
 ControlOptions setUpPlayer(int playerNum) {
-	// get control option for a player
-	
+  // get control option for a player
+
   std::cout << "Player " << playerNum << ": [P]erson, [E]asy AI, [H]ard AI? ";
   char playerChar;
   std::cin >> playerChar;
@@ -289,8 +291,8 @@ ControlOptions setUpPlayer(int playerNum) {
 }
 
 pair<ControlOptions, ControlOptions> setUpPlayers() {
-	// get control options for both players
-	
+  // get control options for both players
+
   std::cout << "Player 1 starts (and is 'X's)" << std::endl;
   std::cout << "Player 2 is 'O's\n" << std::endl;
   ControlOptions player1 = setUpPlayer(1);
@@ -300,9 +302,9 @@ pair<ControlOptions, ControlOptions> setUpPlayers() {
 
 void saveGameData(Board *board, ControlOptions player1,
                   ControlOptions player2) {
-	// write game to a file
-	// always uses the same file
-	
+  // write game to a file
+  // always uses the same file
+
   std::ofstream fout("gameSaves.txt", std::ios::trunc);
 
   for (int x = 0; x < BOARD_WIDTH; x++) {
@@ -317,9 +319,9 @@ void saveGameData(Board *board, ControlOptions player1,
 }
 
 tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
-	// if there is a save file with an unfinished game, load it
-	// else, create a new game
-	
+  // if there is a save file with an unfinished game, load it
+  // else, create a new game
+
   std::ifstream saveReader("gameSaves.txt");
   Board board = {{}, {}, Spot::X};
   std::string line;
@@ -371,8 +373,8 @@ tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
 }
 
 vector<int> openMoves(Board *board) {
-	// list of open columns
-	
+  // list of open columns
+
   vector<int> validMoves = vector<int>();
   for (int i = 0; i < BOARD_WIDTH; i++) {
     if (board->notFilledColumn[i]) {
@@ -382,41 +384,82 @@ vector<int> openMoves(Board *board) {
   return validMoves;
 }
 
-int bestMove(Board *board) {
-	// minimax to calculate the best move
+int simpleScoreBoard(Board *board) {
+  int score = 0;
 
-  int bestScore = INT_MIN;
-  int bestCol = 0;
+  int colScores[7] = {1, 2, 3, 4, 3, 2, 1};
 
-  vector<int> validMoves = openMoves(board);
-  for (int col : validMoves) {
-    dropSpot(board, col);
-
-    bool isMaximizing = board->turn != Spot::O;
-    int score = minimax(board, 0, INT_MIN, INT_MAX, isMaximizing);
-
-    undoMove(board, col);
-    if (score > bestScore) {
-      bestScore = score;
-      std::cout << bestScore << std::endl;
-      bestCol = col;
+    
+  for (int x = 0; x < BOARD_WIDTH; x++) {
+    for (int y = 0; y < BOARD_HEIGHT; y++) {
+      if (board->grid[x][y] == Spot::X) {
+        score += colScores[x];
+      } else if (board->grid[x][y] == Spot::O) {
+        score -= colScores[x];
+      }
     }
   }
 
-  return bestCol;
+  return score;
 }
 
-int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
-	// magic?
-	
-  std::cout << "Depth: " << depth << std::endl;
+int bestMove(Board *board) {
+  // to calculate the best move
+
+  vector<int> validMoves = openMoves(board);
+  Spot turn = board->turn;
+  bool isMaximizing = turn == Spot::X;
+  
+  vector<int> bestMoves = vector<int>();
+  int bestScore = isMaximizing ? INT_MIN : INT_MAX;
+
+  for (int col : validMoves) {
+    board->turn = turn;
+    dropSpot(board, col);
+
+    int score = minimax(board, 0, !isMaximizing);
+    // std::cout << "Score[" << col << "]: " << score << std::endl;
+
+    undoMove(board, col);
+
+    if (score == bestScore) {
+      bestMoves.push_back(col);
+    }
+    if (isMaximizing) {
+      if (score > bestScore) {
+        bestMoves.clear();
+        bestMoves.push_back(col);
+        bestScore = score;
+      }
+    } else {
+      if (score < bestScore) {
+        bestMoves.clear();
+        bestMoves.push_back(col);
+        bestScore = score;
+      }
+    }
+    
+  }
+
+  board->turn = turn;
+
+  int bestCol = bestMoves[rand() % bestMoves.size()];
+  return bestCol;
+
+  // return bestMoves[0];
+}
+
+int minimax(Board *board, int depth, bool isMaximizing) {
+  // magic?
+
   updateFilledColumns(board);
 
   bool gameWon = checkWin(board);
-  if (gameWon && board->turn == Spot::X) {
-    return 10;
-  } else if (gameWon && board->turn == Spot::O) {
-    return -10;
+  // game won on previous turn
+  if (gameWon && board->turn == Spot::X) { // X win
+    return 1000;
+  } else if (gameWon && board->turn == Spot::O) { // O win
+    return -1000;
   }
 
   bool tied = boardFilled(board);
@@ -424,46 +467,42 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
     return 0;
   }
 
+  if (depth >= MAX_DEPTH) {
+    return simpleScoreBoard(board);
+    // return 0;
+  }
+
+
   if (isMaximizing) {
     int bestScore = INT_MIN;
     vector<int> validMoves = openMoves(board);
+
     for (int col : validMoves) {
+
+      board->turn = Spot::X;
       dropSpot(board, col);
 
-      board->turn = nextTurn(board->turn);
-      int score = minimax(board, depth + 1, a, b, false);
-      board->turn = nextTurn(board->turn);
+      int score = minimax(board, depth + 1, false);
 
       undoMove(board, col);
 
       bestScore = MAX(score, bestScore);
-
-      // b cutoff
-      a = MAX(a, bestScore);
-      if (bestScore >= b) {
-        break;
-      }
     }
     return bestScore;
-  } else {
+  } else { // minimizing
     int bestScore = INT_MAX;
     vector<int> validMoves = openMoves(board);
+
     for (int col : validMoves) {
+
+      board->turn = Spot::O;
       dropSpot(board, col);
 
-      board->turn = nextTurn(board->turn);
-      int score = minimax(board, depth + 1, a, b, true);
-      board->turn = nextTurn(board->turn);
+      int score = minimax(board, depth + 1, true);
 
       undoMove(board, col);
 
       bestScore = MIN(score, bestScore);
-
-      // a cutoff
-      b = MIN(b, bestScore);
-      if (bestScore <= a) {
-        break;
-      }
     }
     return bestScore;
   }
@@ -510,4 +549,6 @@ int main() {
     move(&board, player);
     board.turn = nextTurn(board.turn);
   }
+
+  return 0;
 }
