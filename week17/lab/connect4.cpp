@@ -12,13 +12,14 @@
 #include <tuple>    // return more than 2 things from function
 #include <utility>  // pair - return 2 things from function
 #include <vector>   // python like lists for minimax
+#include <string>   // only used when reading from file
 
 using namespace std;
 //----------------------------------------------------------------------------//
 
 
 //----------------------------------------------------------------------------//
-const char SAVE_FILEPATH[] = "connect4Save";
+const char SAVE_FILEPATH[] = "connect4Save.txt";
  
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
@@ -34,7 +35,7 @@ const int COL_SCORES[7] = {1, 2, 3, 4, 3, 2, 1};
 // Empty first so it is the default
 enum Spot { Empty, X, O };
 
-// explicit int values used when reading/writing to file
+// Explicit int values used when reading/writing to file
 enum ControlOptions : int { Person = 0, Easy = 1, Hard = 2 };
 
 // Game info
@@ -71,7 +72,7 @@ void undoMove(Board *board, int col);
 void updateFilledColumns(Board *board); 
 // Gets a valid open column based on the ControlOption, assumes board is not filled
 int getMove(Board *board, ControlOptions player);
-// Gets and makes a move and updates the boards columns
+// Gets and makes a move and updates the boards columns, uses board->turn
 void move(Board *board, ControlOptions player);
 // True if there are no valid moves left, tie unless checkWin() == true
 bool boardFilled(Board *board);
@@ -365,7 +366,6 @@ pair<ControlOptions, ControlOptions> setUpPlayers() {
 }
 
 void saveGameData(Board *board, ControlOptions player1, ControlOptions player2) {
-
   ofstream fout(SAVE_FILEPATH, ios::trunc);
 
   for (int x = 0; x < BOARD_WIDTH; x++) {
@@ -540,6 +540,7 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
       undoMove(board, col);
 
       bestScore = max(score, bestScore);
+      // b cutoff
       if (bestScore > b) {
         break;
       }
@@ -560,6 +561,7 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
       undoMove(board, col);
 
       bestScore = min(score, bestScore);
+      // a cutoff
       if (bestScore < a) {
         break;
       }
@@ -577,24 +579,11 @@ int main() {
   ControlOptions player1 = get<1>(saveData);
   ControlOptions player2 = get<2>(saveData);
 
-  while (true) { // break when game is over or board is filled
-    printGame(&board);
+  string endMessage;
 
-    bool won = checkWin(&board);
-    bool isBoardFilled = boardFilled(&board);
+  printGame(&board);
 
-    saveGameData(&board, player1, player2);
-
-    if (won || isBoardFilled) {
-      if (won) {
-        char winner = spotToChar(nextTurn(board.turn));
-        cout << "The winner is: " << winner << endl;
-      } else {
-        cout << "Tie" << endl;
-      }
-      break; // skip running move()
-    }
-
+  while (board.turn != Spot::Empty) {
     ControlOptions player;
     switch (board.turn) {
     case Spot::X:
@@ -609,7 +598,29 @@ int main() {
 
     move(&board, player);
     board.turn = nextTurn(board.turn);
+
+    bool won = checkWin(&board);
+    bool isBoardFilled = boardFilled(&board);
+
+    if (won || isBoardFilled) {
+      if (won) {
+        // nextTurn because move toggles turn
+        char winner = spotToChar(nextTurn(board.turn));
+        // TODO: why have to do in 2 lines
+        endMessage = "The winner is: ";
+        endMessage += winner;
+      } else {
+        endMessage = "Tie";
+      }
+      board.turn = Spot::Empty;
+    }
+
+
+    printGame(&board);
+    saveGameData(&board, player1, player2);
   }
+
+  cout << endl << endMessage << endl;
 
   return 0;
 }
