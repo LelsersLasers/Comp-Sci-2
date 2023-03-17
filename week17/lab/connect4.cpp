@@ -1,5 +1,5 @@
 /*
-  Description: Play connect 4! Now with AI!
+  Description: Play Connect 4! Now with AI!
   Author: Millan & Jerry
   Date: March 9, 2023
 */
@@ -18,9 +18,8 @@ using namespace std;
 
 
 //----------------------------------------------------------------------------//
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-
+const char SAVE_FILEPATH[] = "connect4Save";
+ 
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
@@ -49,6 +48,9 @@ struct Board {
 
 //----------------------------------------------------------------------------//
 void clearScreen();
+void flushInputBuffer();
+int max(int a, int b);
+int min(int a, int b);
 
 char spotToChar(Spot spot, bool writingToFile = false);
 Spot charToSpot(char c);
@@ -81,6 +83,19 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 void clearScreen() {
   // "clear" is specific to linux/mac
   system("clear");
+}
+
+void flushInputBuffer() {
+  // while (cin.get() != '\n'); 
+  cin.clear();
+}
+
+int max(int a, int b) {
+  return a > b ? a : b;  
+}
+
+int min(int a, int b) {
+  return a < b ? a : b;  
 }
 
 char spotToChar(Spot spot, bool writingToFile) {
@@ -155,11 +170,14 @@ int getMove(Board *board, ControlOptions player) {
   // assumes board is not filled
 
   int col = 0; // default value to avoid warning
+  flushInputBuffer();
   switch (player) {
   case ControlOptions::Person:
     cout << "Choose column to place piece: ";
     cin >> col;
+    cout << "col: " << col << endl;
     col--; // index
+    cout << "col: " << col << endl;
     break;
   case ControlOptions::Easy:
     col = rand() % BOARD_WIDTH;
@@ -177,6 +195,7 @@ int getMove(Board *board, ControlOptions player) {
     }
   }
 
+  // TODO: why is col not reset????
   cout << "Invalid move!" << endl;
   return getMove(board, player);
 }
@@ -343,7 +362,7 @@ void saveGameData(Board *board, ControlOptions player1, ControlOptions player2) 
   // write game to a file
   // always uses the same file
 
-  ofstream fout("gameSaves.txt", ios::trunc);
+  ofstream fout(SAVE_FILEPATH, ios::trunc);
 
   for (int x = 0; x < BOARD_WIDTH; x++) {
     for (int y = 0; y < BOARD_HEIGHT; y++) {
@@ -360,7 +379,7 @@ tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
   // if there is a save file with an unfinished game, load it
   // else, create a new game
 
-  ifstream saveReader("gameSaves.txt");
+  ifstream saveReader(SAVE_FILEPATH);
   Board board = {{}, {}, Spot::X};
   string line;
 
@@ -523,11 +542,11 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
 
       undoMove(board, col);
 
-      bestScore = MAX(score, bestScore);
+      bestScore = max(score, bestScore);
       if (bestScore > b) {
         break;
       }
-      a = MAX(a, bestScore);
+      a = max(a, bestScore);
     }
     return bestScore;
   } else { // minimizing
@@ -543,11 +562,11 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
 
       undoMove(board, col);
 
-      bestScore = MIN(score, bestScore);
+      bestScore = min(score, bestScore);
       if (bestScore < a) {
         break;
       }
-      b = MIN(b, bestScore);
+      b = min(b, bestScore);
     }
     return bestScore;
   }
