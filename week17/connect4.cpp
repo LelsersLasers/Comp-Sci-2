@@ -1,5 +1,5 @@
 /*
-        Description: Play connect 4! Now with AI!
+  Description: Play connect 4! Now with AI!
   Author: Millan & Jerry
   Date: March 9, 2023
 */
@@ -105,6 +105,13 @@ void undoMove(Board *board, int col) {
   }
 }
 
+void updateFilledColumns(Board *board) {
+  // if the top of a column is empty, you can place a piece there
+  for (int x = 0; x < BOARD_WIDTH; x++) {
+    board->notFilledColumn[x] = board->grid[x][BOARD_HEIGHT - 1] == Spot::Empty;
+  }
+}
+
 int getMove(Board *board, ControlOptions player) {
   // gets a valid open column based on the ControlOption
   // assumes board is not filled
@@ -124,6 +131,7 @@ int getMove(Board *board, ControlOptions player) {
     break;
   }
 
+  updateFilledColumns(board);
   for (int x = 0; x < BOARD_WIDTH; x++) {
     // pointer arithmetic
     if (x == col && *(board->notFilledColumn + x)) {
@@ -133,13 +141,6 @@ int getMove(Board *board, ControlOptions player) {
 
   std::cout << "Invalid move!" << std::endl;
   return getMove(board, player);
-}
-
-void updateFilledColumns(Board *board) {
-  // if the top of a column is empty, you can place a piece there
-  for (int x = 0; x < BOARD_WIDTH; x++) {
-    board->notFilledColumn[x] = board->grid[x][BOARD_HEIGHT - 1] == Spot::Empty;
-  }
 }
 
 void move(Board *board, ControlOptions player) {
@@ -443,6 +444,10 @@ int bestMove(Board *board) {
 
   board->turn = turn;
 
+  if (bestMoves.size() == 0) {
+    std::cout << "The AI is stumped???" << std::endl;
+    exit(1);
+  }
   int bestCol = bestMoves[rand() % bestMoves.size()];
   return bestCol;
 
