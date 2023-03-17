@@ -47,36 +47,56 @@ struct Board {
 
 
 //----------------------------------------------------------------------------//
+// Clear terminal output
 void clearScreen();
+// Clear cin buffer // TODO: doesn't work
 void flushInputBuffer();
+// Higher of 2 numbers
 int max(int a, int b);
+// Lower of 2 numbers
 int min(int a, int b);
 
+// Spot enum to char, used to print to screen and write to file
 char spotToChar(Spot spot, bool writingToFile = false);
+// char to Spot enum, used when reading from file
 Spot charToSpot(char c);
+// toggles between X and O
 Spot nextTurn(Spot spot);
 
-int bestMove(Board *board);
-int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
-
+// Place piece in column, uses Board->turn
 void dropSpot(Board *board, int col);
+// Removes highest piece in column
 void undoMove(Board *board, int col);
+// Update Board->notFilledColumn
 void updateFilledColumns(Board *board); 
+// Gets a valid open column based on the ControlOption, assumes board is not filled
 int getMove(Board *board, ControlOptions player);
+// Gets and makes a move and updates the boards columns
 void move(Board *board, ControlOptions player);
+// True if there are no valid moves left, tie unless checkWin() == true
 bool boardFilled(Board *board);
+// True if someone has won
 bool checkWin(Board *board);
+// Show game status (board, turn or game over)
 void printGame(Board *board);
 
+// Gets a valid control option for a player
 ControlOptions setUpPlayer(int playerNum);
+// Print out info about control options, gets control options for both players
 pair<ControlOptions, ControlOptions> setUpPlayers();
 
+// Write game to a file, always uses the same file
 void saveGameData(Board *board, ControlOptions player1, ControlOptions player2);
+// If there is a save with an unfinished game load it, otherwirse create a new game
 tuple<Board, ControlOptions, ControlOptions> readSaveGameData();
 
+// List of open columns
 vector<int> openMoves(Board *board);
+// Score an unfinished board
 int simpleScoreBoard(Board *board);
+// Hard AI, finds best possible move
 int bestMove(Board *board);
+// Soft-fail minimax, if end of game is not found prioritize middle moves
 int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 //----------------------------------------------------------------------------//
 
@@ -115,7 +135,6 @@ char spotToChar(Spot spot, bool writingToFile) {
 }
 
 Spot charToSpot(char c) {
-  // for reading from file
   switch (c) {
   case 'X':
     return Spot::X;
@@ -127,7 +146,6 @@ Spot charToSpot(char c) {
 }
 
 Spot nextTurn(Spot spot) {
-  // toggles between X and 0
   switch (spot) {
   case Spot::X:
     return Spot::O;
@@ -166,9 +184,6 @@ void updateFilledColumns(Board *board) {
 }
 
 int getMove(Board *board, ControlOptions player) {
-  // gets a valid open column based on the ControlOption
-  // assumes board is not filled
-
   int col = 0; // default value to avoid warning
   flushInputBuffer();
   switch (player) {
@@ -201,8 +216,6 @@ int getMove(Board *board, ControlOptions player) {
 }
 
 void move(Board *board, ControlOptions player) {
-  // gets and makes a move and updates the boards columns
-
   int col = getMove(board, player);
   dropSpot(board, col);
 
@@ -210,7 +223,6 @@ void move(Board *board, ControlOptions player) {
 }
 
 bool boardFilled(Board *board) {
-  // true if there are no valid moves left
   for (int x = 0; x < BOARD_WIDTH; x++) {
     // pointer arithmetic
     if (*(board->notFilledColumn + x)) {
@@ -221,8 +233,8 @@ bool boardFilled(Board *board) {
 }
 
 bool checkWin(Board *board) {
-  // true if someone has won
-
+  // Lots of duplicated logic (could be faster, more concise), but more readable
+  
   // check vertical win
   for (int x = 0; x < BOARD_WIDTH; x++) {
     for (int y = 0; y <= BOARD_HEIGHT - 4; y++) {
@@ -303,8 +315,6 @@ bool checkWin(Board *board) {
 }
 
 void printGame(Board *board) {
-  // show the game
-
   clearScreen();
   cout << endl;
 
@@ -326,8 +336,6 @@ void printGame(Board *board) {
 }
 
 ControlOptions setUpPlayer(int playerNum) {
-  // get control option for a player
-
   cout << "Player " << playerNum << ": [P]erson, [E]asy AI, [H]ard AI? ";
   char playerChar;
   cin >> playerChar;
@@ -349,8 +357,6 @@ ControlOptions setUpPlayer(int playerNum) {
 }
 
 pair<ControlOptions, ControlOptions> setUpPlayers() {
-  // get control options for both players
-
   cout << "Player 1 starts (and is 'X's)" << endl;
   cout << "Player 2 is 'O's\n" << endl;
   ControlOptions player1 = setUpPlayer(1);
@@ -359,8 +365,6 @@ pair<ControlOptions, ControlOptions> setUpPlayers() {
 }
 
 void saveGameData(Board *board, ControlOptions player1, ControlOptions player2) {
-  // write game to a file
-  // always uses the same file
 
   ofstream fout(SAVE_FILEPATH, ios::trunc);
 
@@ -376,9 +380,6 @@ void saveGameData(Board *board, ControlOptions player1, ControlOptions player2) 
 }
 
 tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
-  // if there is a save file with an unfinished game, load it
-  // else, create a new game
-
   ifstream saveReader(SAVE_FILEPATH);
   Board board = {{}, {}, Spot::X};
   string line;
@@ -430,8 +431,6 @@ tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
 }
 
 vector<int> openMoves(Board *board) {
-  // list of open columns
-
   vector<int> validMoves = vector<int>();
   for (int i = 0; i < BOARD_WIDTH; i++) {
     if (board->notFilledColumn[i]) {
@@ -443,9 +442,7 @@ vector<int> openMoves(Board *board) {
 
 int simpleScoreBoard(Board *board) {
   int score = 0;
-
-
-    
+   
   for (int x = 0; x < BOARD_WIDTH; x++) {
     for (int y = 0; y < BOARD_HEIGHT; y++) {
       if (board->grid[x][y] == Spot::X) {
