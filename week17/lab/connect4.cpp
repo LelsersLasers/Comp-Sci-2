@@ -23,7 +23,7 @@ const char SAVE_FILEPATH[] = "connect4Save.txt";
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
-const int MAX_DEPTH = 8;
+const int MAX_DEPTH = 9;
 
 // Use these numbers to score an unfinished board (used in minimax)
 const int COL_SCORES[7] = {1, 2, 3, 4, 3, 2, 1};
