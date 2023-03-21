@@ -26,7 +26,7 @@ const int BOARD_HEIGHT = 6;
 const int MAX_DEPTH = 9;
 
 // Use these numbers to score an unfinished board (used in minimax)
-const int COL_SCORES[7] = {1, 2, 3, 4, 3, 2, 1};
+const int COL_SCORES[7] = {1, 2, 4, 7, 4, 2, 1};
 //----------------------------------------------------------------------------//
 
 
