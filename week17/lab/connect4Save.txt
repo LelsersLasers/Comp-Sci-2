@@ -1,9 +1,9 @@
-XXXOX+
-XOO+++
-OXOXOX
-XOXOOX
-XOOX++
-XXOXOO
-OOXOX+
+X+++++
+XO++++
+XO++++
+X+++++
+++++++
+O+++++
+++++++
 2
-2
+1

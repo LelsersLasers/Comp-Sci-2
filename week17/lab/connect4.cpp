@@ -23,7 +23,7 @@ const char SAVE_FILEPATH[] = "connect4Save.txt";
 const int BOARD_WIDTH = 7;
 const int BOARD_HEIGHT = 6;
 
-const int MAX_DEPTH = 9;
+const int MAX_DEPTH = 8;
 
 // Use these numbers to score an unfinished board (used in minimax)
 const int COL_SCORES[7] = {1, 2, 4, 7, 4, 2, 1};
@@ -49,8 +49,6 @@ struct Board {
 //----------------------------------------------------------------------------//
 // Clear terminal output
 void clearScreen();
-// Clear cin buffer // TODO: doesn't work
-void flushInputBuffer();
 // Higher of 2 numbers
 int max(int a, int b);
 // Lower of 2 numbers
@@ -102,16 +100,6 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 void clearScreen() {
   // "clear" is specific to linux/mac
   system("clear");
-}
-
-void flushInputBuffer() {
-  // while (cin.get() != '\n'); 
-
-  // cin.clear();
-  // fflush(stdin);
-
-  string temp;
-  std::getline(std::cin, temp);
 }
 
 int max(int a, int b) {
@@ -189,7 +177,6 @@ void updateFilledColumns(Board *board) {
 
 int getMove(Board *board, ControlOptions player) {
   int col = 0; // default value to avoid warning
-  // flushInputBuffer();
   switch (player) {
   case ControlOptions::Person:
     cout << "Choose column to place piece: ";
@@ -215,11 +202,6 @@ int getMove(Board *board, ControlOptions player) {
   }
 
   cout << "Invalid move!" << endl;
-
-  // TODO: why is col not reset????
-  if (player == ControlOptions::Person) {
-    flushInputBuffer();
-  }
 
   return getMove(board, player);
 }
@@ -472,7 +454,7 @@ int bestMove(Board *board) {
     int score = minimax(board, 0, INT_MIN, INT_MAX, !isMaximizing);
     undoMove(board, col);
 
-    if ((isMaximizing && score >= bestScore) || (!isMaximizing && score <= bestScore)) {
+    if ((isMaximizing && score > bestScore) || (!isMaximizing && score < bestScore)) {
       bestScore = score;
       bestCol = col;
     }
@@ -576,9 +558,7 @@ int main() {
       if (won) {
         // nextTurn because move toggles turn
         char winner = spotToChar(nextTurn(board.turn));
-        // TODO: why have to do in 2 lines
-        endMessage = "The winner is: ";
-        endMessage += winner;
+        endMessage = "The winner is: " + string(1, winner);
       } else {
         endMessage = "Tie";
       }
