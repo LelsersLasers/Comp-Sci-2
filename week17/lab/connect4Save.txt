@@ -1,9 +1,9 @@
-++++++
-++++++
-++++++
-XO++++
-++++++
-++++++
-++++++
-0
+XXXOX+
+XOO+++
+OXOXOX
+XOXOOX
+XOOX++
+XXOXOO
+OOXOX+
+2
 2

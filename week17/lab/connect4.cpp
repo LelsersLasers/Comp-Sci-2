@@ -11,7 +11,6 @@
 #include <fstream>  // file reading and writing
 #include <tuple>    // return more than 2 things from function
 #include <utility>  // pair - return 2 things from function
-#include <vector>   // python like lists for minimax
 #include <string>   // only used when reading from file
 
 using namespace std;
@@ -91,8 +90,6 @@ void saveGameData(Board *board, ControlOptions player1, ControlOptions player2);
 // If there is a save with an unfinished game load it, otherwirse create a new game
 tuple<Board, ControlOptions, ControlOptions> readSaveGameData();
 
-// List of open columns
-vector<int> openMoves(Board *board);
 // Score an unfinished board
 int simpleScoreBoard(Board *board);
 // Hard AI, finds best possible move
@@ -441,16 +438,6 @@ tuple<Board, ControlOptions, ControlOptions> readSaveGameData() {
   return make_tuple(board, player1, player2);
 }
 
-vector<int> openMoves(Board *board) {
-  vector<int> validMoves = vector<int>();
-  for (int i = 0; i < BOARD_WIDTH; i++) {
-    if (board->notFilledColumn[i]) {
-      validMoves.push_back(i);
-    }
-  }
-  return validMoves;
-}
-
 int simpleScoreBoard(Board *board) {
   int score = 0;
    
@@ -468,58 +455,39 @@ int simpleScoreBoard(Board *board) {
 }
 
 int bestMove(Board *board) {
-  // to calculate the best move
-
-  vector<int> validMoves = openMoves(board);
   Spot turn = board->turn;
   bool isMaximizing = turn == Spot::X;
-  
-  vector<int> bestMoves = vector<int>();
   int bestScore = isMaximizing ? INT_MIN : INT_MAX;
+  int bestCol = 0;
 
-  for (int col : validMoves) {
+  updateFilledColumns(board);
+
+  for (int col = 0; col < BOARD_WIDTH; col++) {
+    if (!board->notFilledColumn[col]) continue;
+
+    // constantly reset turn because minimax can have and even or odd depth
     board->turn = turn;
+
     dropSpot(board, col);
-
     int score = minimax(board, 0, INT_MIN, INT_MAX, !isMaximizing);
-    // cout << "Score[" << col << "]: " << score << endl;
-
     undoMove(board, col);
 
-    if (score == bestScore) {
-      bestMoves.push_back(col);
+    if ((isMaximizing && score >= bestScore) || (!isMaximizing && score <= bestScore)) {
+      bestScore = score;
+      bestCol = col;
     }
-    if (isMaximizing) {
-      if (score > bestScore) {
-        bestMoves.clear();
-        bestMoves.push_back(col);
-        bestScore = score;
-      }
-    } else {
-      if (score < bestScore) {
-        bestMoves.clear();
-        bestMoves.push_back(col);
-        bestScore = score;
-      }
-    }
-    
   }
 
   board->turn = turn;
 
-  int bestCol = bestMoves[rand() % bestMoves.size()];
   return bestCol;
-
-  // return bestMoves[0];
 }
 
 int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
-  // magic?
-
   updateFilledColumns(board);
 
   bool gameWon = checkWin(board);
-  // game won on previous turn
+  // game won on previous turn (but board->turn has yet to be toggled/updated)
   if (gameWon && board->turn == Spot::X) { // X win
     return 1000;
   } else if (gameWon && board->turn == Spot::O) { // O win
@@ -527,21 +495,13 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
   }
 
   bool tied = boardFilled(board);
-  if (tied) {
-    return 0;
-  }
-
-  if (depth >= MAX_DEPTH) {
-    return simpleScoreBoard(board);
-    // return 0;
-  }
-
-
+  if (tied) return 0;
+  if (depth >= MAX_DEPTH) return simpleScoreBoard(board);
+  
   if (isMaximizing) {
     int bestScore = INT_MIN;
-    vector<int> validMoves = openMoves(board);
-
-    for (int col : validMoves) {
+    for (int col = 0; col < BOARD_WIDTH; col++) {
+      if (!board->notFilledColumn[col]) continue;
 
       board->turn = Spot::X;
       dropSpot(board, col);
@@ -551,8 +511,8 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
       undoMove(board, col);
 
       bestScore = max(score, bestScore);
-      // b cutoff
       if (bestScore > b) {
+        // b cutoff
         break;
       }
       a = max(a, bestScore);
@@ -560,9 +520,8 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
     return bestScore;
   } else { // minimizing
     int bestScore = INT_MAX;
-    vector<int> validMoves = openMoves(board);
-
-    for (int col : validMoves) {
+    for (int col = 0; col < BOARD_WIDTH; col++) {
+      if (!board->notFilledColumn[col]) continue;
 
       board->turn = Spot::O;
       dropSpot(board, col);
@@ -572,8 +531,8 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing) {
       undoMove(board, col);
 
       bestScore = min(score, bestScore);
-      // a cutoff
       if (bestScore < a) {
+        // a cutoff
         break;
       }
       b = min(b, bestScore);
