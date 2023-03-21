@@ -97,7 +97,8 @@ vector<int> openMoves(Board *board);
 int simpleScoreBoard(Board *board);
 // Hard AI, finds best possible move
 int bestMove(Board *board);
-// Soft-fail minimax, if end of game is not found prioritize middle moves
+// Minimax with soft-fail alpha-beta pruning
+// if end of game is not found prioritize middle moves
 int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 //----------------------------------------------------------------------------//
 
@@ -108,7 +109,12 @@ void clearScreen() {
 
 void flushInputBuffer() {
   // while (cin.get() != '\n'); 
-  cin.clear();
+
+  // cin.clear();
+  // fflush(stdin);
+
+  string temp;
+  std::getline(std::cin, temp);
 }
 
 int max(int a, int b) {
@@ -168,7 +174,7 @@ void dropSpot(Board *board, int col) {
 }
 
 void undoMove(Board *board, int col) {
-  // replace top of a column with empty
+  // replace top most piece of a column with empty
   for (int y = BOARD_HEIGHT - 1; y >= 0; y--) {
     if (board->grid[col][y] != Spot::Empty) {
       board->grid[col][y] = Spot::Empty;
@@ -186,7 +192,7 @@ void updateFilledColumns(Board *board) {
 
 int getMove(Board *board, ControlOptions player) {
   int col = 0; // default value to avoid warning
-  flushInputBuffer();
+  // flushInputBuffer();
   switch (player) {
   case ControlOptions::Person:
     cout << "Choose column to place piece: ";
@@ -211,8 +217,13 @@ int getMove(Board *board, ControlOptions player) {
     }
   }
 
-  // TODO: why is col not reset????
   cout << "Invalid move!" << endl;
+
+  // TODO: why is col not reset????
+  if (player == ControlOptions::Person) {
+    flushInputBuffer();
+  }
+
   return getMove(board, player);
 }
 
