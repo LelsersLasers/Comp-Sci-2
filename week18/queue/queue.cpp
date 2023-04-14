@@ -1,9 +1,8 @@
 #include <iostream>
+#include <string>
 
 
-using T = float;
-
-
+template <class T>
 class Entry {
 
 public:
@@ -11,7 +10,7 @@ public:
     T content;
 
     Entry() {
-        content = 0;
+        content = T(); // will work even for primitive types (ex: float, etc)
         next = nullptr;
     }
 
@@ -23,15 +22,15 @@ public:
 };
 
 
+template <class T>
 class Queue {
 
 private:
 
-    Entry* first;
-    Entry* back;
+    Entry<T>* first;
+    Entry<T>* back;
     long size;
 
-    bool isEmpty() { return size == 0; }
 
 public:
 
@@ -40,10 +39,12 @@ public:
         back = nullptr;
         size = 0;
     }
+
+    bool isEmpty() { return first == nullptr; }
     
     void enqueue(T content) {
         // adds element to the back of the queue
-        Entry* entry = new Entry(content);
+        Entry<T>* entry = new Entry<T>(content);
         if (this->isEmpty()) {
             first = entry;
             back = entry;
@@ -59,7 +60,7 @@ public:
         if (this->isEmpty()) { throw "Queue is empty"; }
 
         T content = first->content;
-        Entry* entry = first;
+        Entry<T>* entry = first;
         first = first->next;
         delete entry;
         size--;
@@ -84,7 +85,7 @@ public:
 
     void dump() {
         // prints the content of the queue
-        Entry* entry = first;
+        Entry<T>* entry = first;
         while (entry != nullptr) {
             std::cout << entry->content << " ";
             entry = entry->next;
@@ -95,26 +96,70 @@ public:
 
 
 int main() {
-    Queue queue;
+    {
+        Queue<int> queue;
 
-    queue.enqueue(1);
-    queue.enqueue(2);
-    queue.dump();
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.dump();
 
-    std::cout << queue.dequeue() << std::endl;
-    queue.dump();
+        std::cout << "deque " << queue.dequeue() << std::endl;
+        queue.dump();
 
-    queue.enqueue(3);
+        queue.enqueue(3);
 
-    std::cout << queue.peek() << std::endl;
-    queue.dump();
+        std::cout << "peek " << queue.peek() << std::endl;
+        queue.dump();
 
-    std::cout << queue.getSize() << std::endl;
+        std::cout << "size " << queue.getSize() << std::endl;
 
-    queue.clear();
-    queue.dump();
+        queue.clear();
+
+        std::cout << "cleared" << std::endl;
+        queue.dump();
+
+        queue.enqueue(8);
+        queue.enqueue(9);
+        queue.dump();
+
+        std::cout << "deque " << queue.dequeue() << std::endl;
+        queue.dump();
+
+        std::cout << "size " << queue.getSize() << std::endl;
+    }
+
+    {
+        Queue<std::string> queue;
+
+        queue.enqueue("STRING 1");
+        queue.enqueue("STRING 2");
+        queue.dump();
+
+        std::cout << "deque " << queue.dequeue() << std::endl;
+        queue.dump();
+
+        queue.enqueue("STRING 3");
+
+        std::cout << "peek " << queue.peek() << std::endl;
+        queue.dump();
+
+        std::cout << "size " << queue.getSize() << std::endl;
+
+        queue.clear();
+
+        std::cout << "cleared" << std::endl;
+        queue.dump();
+
+        queue.enqueue("STRING 4");
+        queue.enqueue("STRING 5");
+        queue.dump();
+
+        std::cout << "deque " << queue.dequeue() << std::endl;
+        queue.dump();
+
+        std::cout << "size " << queue.getSize() << std::endl;
+    }
 
 
     return 0;
 }
-
