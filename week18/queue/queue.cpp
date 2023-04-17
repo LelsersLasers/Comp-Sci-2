@@ -92,6 +92,26 @@ public:
         }
         std::cout << std::endl;
     }
+
+    ~Queue() {
+        this->clear();
+    }
+
+    Queue operator+(const Queue& other) {
+        Queue<T> result;
+
+        Entry<T>* entry = this->first;
+        while (entry != nullptr) {
+            result.enqueue(entry->content);
+            entry = entry->next;
+        }
+        entry = other.first;
+        while (entry != nullptr) {
+            result.enqueue(entry->content);
+            entry = entry->next;
+        }
+        return result;
+    }
 };
 
 
@@ -129,6 +149,7 @@ int main() {
     }
 
     {
+        std::cout << std::endl;
         Queue<std::string> queue;
 
         queue.enqueue("STRING 1");
@@ -158,6 +179,23 @@ int main() {
         queue.dump();
 
         std::cout << "size " << queue.getSize() << std::endl;
+    }
+
+    {
+        std::cout << std::endl;
+        Queue<int> queue;
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.dump();
+
+        Queue<int> queue2;
+        queue2.enqueue(3);
+        queue2.enqueue(4);
+        queue2.dump();
+
+        Queue<int> queue3 = queue + queue2;
+        queue3.dump();
     }
 
 
