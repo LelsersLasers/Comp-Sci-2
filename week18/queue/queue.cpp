@@ -94,6 +94,7 @@ public:
     }
 
     ~Queue() {
+        // free memory of allocated Entrys when queue is destroyed
         this->clear();
     }
 
