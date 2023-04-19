@@ -132,6 +132,29 @@ public:
 		return content;
 	}
 
+	T pop() {
+		// removes last element from list and returns its content (delist back)
+		if (this->isEmpty()) { throw "List is empty"; }
+
+		T content = back->content;
+		Entry<T>* entry = back;
+		if (first == back) {
+			first = nullptr;
+			back = nullptr;
+		} else {
+			Entry<T>* previous = first;
+			while (previous->next != back) {
+				previous = previous->next;
+			}
+			back = previous;
+			back->next = nullptr;
+		}
+		delete entry;
+
+		size--;
+		return content;
+	}
+
 	void insert(long index, T content) {
 		// inserts element at given index (enlist at index)
 		if (index < 0 || index > size) { throw "Index out of bounds"; }
