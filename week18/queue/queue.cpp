@@ -1,14 +1,17 @@
 #include <iostream>
 #include <string>
+
+// assert(condition) - if condition is false, the program will stop
 #include <cassert>
 
 
 template <class T>
 class Entry {
+// Entry in a singly linked list queue
 
 public:
-    Entry* next;
-    T content;
+    Entry* next; // pointer to next element in the queue
+    T content; // content of the entry
 
     Entry() {
         content = T(); // will work even for primitive types (ex: float, etc)
@@ -25,12 +28,13 @@ public:
 
 template <class T>
 class Queue {
+// Singly linked list queue
 
 private:
 
-    Entry<T>* first;
-    Entry<T>* back;
-    long size;
+    Entry<T>* first; // first element in the queue
+    Entry<T>* back; // last element in the queue
+    long size; // number of elements in the queue (size of the queue)
 
 
 public:
