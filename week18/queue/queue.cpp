@@ -322,10 +322,18 @@ int main() {
 		queue.dump();
 	}
 
+    { // Test: memory freeing
+        Queue<std::string> queue;
+
+        for (int i = 0; i < 99999999; i++) {
+            queue.enqueue("SOME STRING OR SOMETHING I GUESS");
+        }
+    } // queue goes out of scope and is destroyed (memory freed)
+
     { // Test: assertions
         Queue<int> queue;
 
-        // attempt to dequeue from empty queue
+        std::cout << "Expecting crash (trying to dequeue from empty queue)" << std::endl;
         queue.dequeue();
     }
 
