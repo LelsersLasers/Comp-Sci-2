@@ -19,6 +19,7 @@ public:
 	Node* right;
 
 	int heightBalance;
+	int height;
 
 
 	Node() {
@@ -27,6 +28,7 @@ public:
 		right = nullptr;
 
 		heightBalance = T();
+		height = 0;
 	}
 
 	Node(T content) {
@@ -35,6 +37,7 @@ public:
 		right = nullptr;
 
 		heightBalance = T();
+		height = 0;
 	}
 
 	void dump() {
@@ -73,47 +76,33 @@ public:
 		return left == nullptr && right == nullptr;
 	}
 
-	int maxHeight(int height) {
-		// returns the maximum height of the node and its children
-		// height is the height of the node
-
-		int leftHeight = 0;
-		int rightHeight = 0;
-
+	void updateHeights() {
+		// updates the height of the node and its children
 		if (left != nullptr) {
-			leftHeight = left->maxHeight(height + 1);
+			left->updateHeights();
 		}
 
 		if (right != nullptr) {
-			rightHeight = right->maxHeight(height + 1);
+			right->updateHeights();
 		}
 
-		return std::max(height, std::max(leftHeight, rightHeight));
-	}
-
-	void updateHeightBalance(int height) {
-		// updates the height balance of the node and its children
-		// height is the height of the node
-
-		int leftHeight = 0;
-		int rightHeight = 0;
-
-		if (left != nullptr) {
-			left->updateHeightBalance(height + 1);
-			leftHeight = left->maxHeight(0);
+		if (isLeaf()) {
+			height = 0;
+		} else if (left == nullptr) {
+			height = right->height + 1;
+		} else if (right == nullptr) {
+			height = left->height + 1;
+		} else {
+			height = std::max(left->height, right->height) + 1;
 		}
 
-		if (right != nullptr) {
-			right->updateHeightBalance(height + 1);
-			rightHeight = right->maxHeight(0);
-		}
-
-
-		heightBalance = rightHeight - leftHeight;
+		heightBalance = height;
+		// heightBalance = (right == nullptr ? 0 : right->height) - (left == nullptr ? 0 : left->height);
 	}
 };
 
 class BinaryTree {
+// Ordered and balanced binary tree
 
 private:
 
@@ -153,24 +142,35 @@ public:
 					}
 				}
 			}
-			updateHeightBalances();
+			root->updateHeights();
 		}
 	}
 
-	void updateHeightBalances() {
+	bool contains(T content) {
+		// returns true if the tree contains the given content
 		if (this->isEmpty()) {
-			return;
+			return false;
+		} else {
+			Node* current = root;
+			while (true) {
+				if (content == current->content) {
+					return true;
+				} else if (content < current->content) {
+					if (current->left == nullptr) {
+						return false;
+					} else {
+						current = current->left;
+					}
+				} else {
+					if (current->right == nullptr) {
+						return false;
+					} else {
+						current = current->right;
+					}
+				}
+			}
 		}
-
-		root->updateHeightBalance(0);
 	}
-
-	T peek() {
-		// returns the content of the root
-		assert(!this->isEmpty());
-		return root->content;
-	}
-
 	
 	void dump() {
 		// prints the content of the tree from top to bottom
@@ -185,7 +185,7 @@ public:
 	}
 
 	void prettyDump() {
-		// prints the content of the tree in a tree-like format
+		// prints the content of the tree in a tree-like format (where root is on the left)
 
 		if (this->isEmpty()) {
 			std::cout << "Empty tree" << std::endl;
@@ -209,7 +209,17 @@ int main() {
 	{
 		BinaryTree tree;
 
-		for (int i = 0; i < 3; i++) {
+		// while (true) {
+		// 	int number = randomNumber();
+		// 	if (tree.contains(number)) {
+		// 		std::cout << "Found " << number << std::endl;
+		// 		break;
+		// 	} else {
+		// 		tree.insert(number);
+		// 	}
+		// }
+
+		for (int i = 0; i < 4; i++) {
 			tree.insert(randomNumber());
 		}
 
