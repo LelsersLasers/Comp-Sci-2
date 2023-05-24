@@ -36,6 +36,17 @@ Node::Node(long content, Node* parent) {
 	this->heightBalance = 0;
 }
 
+void Node::deconstructorRecursive() {
+	if (this->left != nullptr) {
+		this->left->deconstructorRecursive();
+	}
+	if (this->right != nullptr) {
+		this->right->deconstructorRecursive();
+	}
+
+	delete this;
+}
+
 void Node::add_left(long content) {
 	if (this->left == nullptr) {
 		this->left = new Node(content, this);
@@ -106,6 +117,62 @@ bool Node::contains(long content) {
 	}
 }
 
+bool Node::isLeaf() {
+	return (this->left == nullptr && this->right == nullptr);
+}
+
+void Node::delete_node(long content) {
+	if (content == this->content) {
+		if (this->isLeaf()) {
+			if (this->parent->left == this) {
+				this->parent->left = nullptr;
+			}
+			else if (this->parent->right == this) {
+				this->parent->right = nullptr;
+			}
+			delete this;
+		}
+		else if (this->right == nullptr) { // left is not nullptr
+			if (this->parent->left == this) {
+				this->parent->left = this->left;
+			}
+			else if (this->parent->right == this) {
+				this->parent->right = this->left;
+			}
+			delete this;
+		}
+		else if (this->left == nullptr) { // right is not nullptr
+			std::cout << "right is not nullptr " << this->content << std::endl; 
+			if (this->parent->left == this) {
+				std::cout << "parent left is " << this->parent->left->content << std::endl;
+				this->parent->left = this->right;
+			}
+			else if (this->parent->right == this) {
+				this->parent->right = this->right;
+			}
+			delete this;
+		}
+		else if (this->left != nullptr && this->right != nullptr) {
+			Node* current = this->right;
+			while (current->left != nullptr) {
+				current = current->left;
+			}
+			this->content = current->content;
+			current->delete_node(current->content);
+		}
+	}
+	else if (content < this->content) {
+		if (this->left != nullptr) {
+			this->left->delete_node(content);
+		}
+	}
+	else if (content > this->content) {
+		if (this->right != nullptr) {
+			this->right->delete_node(content);
+		}
+	}
+}
+
 void Node::dump() {
 	if (this->left != nullptr) {
 		this->left->dump();
@@ -139,6 +206,11 @@ void Node::prettyDump(int height) {
 Tree::Tree() {
 	this->head = nullptr;
 }
+Tree::~Tree() {
+	if (this->head != nullptr) {
+		this->head->deconstructorRecursive();
+	}
+}
 
 void Tree::add_node(long content) {
 	if (this->head == nullptr) {
@@ -169,6 +241,45 @@ bool Tree::contains(long content) {
 		}
 	}
 	return false;
+}
+
+void Tree::delete_node(long content) {
+	if (this->head == nullptr) return;
+
+	
+	if (content == this->head->content) {
+		if (this->head->isLeaf()) {
+			delete this->head;
+			this->head = nullptr;
+		}
+		else if (this->head->left == nullptr) { // right is not nullptr
+			Node* temp = this->head;
+			this->head = this->head->right;
+			this->head->parent = nullptr;
+			delete temp;
+		}
+		else if (this->head->right == nullptr) { // left is not nullptr
+			Node* temp = this->head;
+			this->head = this->head->left;
+			this->head->parent = nullptr;
+			delete temp;
+		}
+		else { // both are not nullptr
+			Node* temp = this->head->right; // choose right to be moved up
+			while (temp->left != nullptr) {
+				temp = temp->left;
+			}
+			this->head->content = temp->content;
+			temp->parent->left = nullptr;
+			delete temp;
+		}
+	}
+	else if (content < this->head->content) {
+		this->head->left->delete_node(content);
+	}
+	else if (content > this->head->content) {
+		this->head->right->delete_node(content);
+	}
 }
 
 void Tree::dump() {

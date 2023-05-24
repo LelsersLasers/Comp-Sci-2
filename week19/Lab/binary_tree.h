@@ -24,6 +24,7 @@ class Node {
 
         // Default constructor, assigns 0 as its content.
         Node();
+        void deconstructorRecursive();
         // Constructor with content.
         Node(long content);
         // Constructor with content and parent.
@@ -31,6 +32,12 @@ class Node {
 
         // returns true if the tree contains the content (recursive)
         bool contains(long content);
+
+        // returns true if the node has no children
+        bool isLeaf();
+
+        // delete a node with the given content (silently ignore if not found)
+        void delete_node(long content);
 
         // dump in order
         void dump();
@@ -51,6 +58,7 @@ class Tree {
         Node* head;
         // Default constructor.  Assigns head to be a null pointer.
         Tree();
+        ~Tree();
         /* Add content in the appropriate location, where every Node to its
             left has content smaller than this content, everything to the 
             right has larger content.  Silently ignore duplicated content. */
@@ -58,6 +66,9 @@ class Tree {
 
         // returns true if the tree contains the content
         bool contains(long content);
+
+        // delete a node with the given content (silently ignore if not found)
+        void delete_node(long content);
 
         // dump in order
         void dump();
