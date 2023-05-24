@@ -15,5 +15,8 @@ int main() {
     tree.dump();
     tree.prettyDump();
 
+    cout << "Tree contains 13: " << tree.contains(13) << endl;
+    cout << "Tree does not contain 1000: " << tree.contains(1000) << endl;
+
     return 0;
 }

@@ -84,6 +84,28 @@ void Node::add_right(long content) {
 	}
 }
 
+bool Node::contains(long content) {
+	if (content == this->content) {
+		return true;
+	}
+	else if (content < this->content) {
+		if (this->left == nullptr) {
+			return false;
+		}
+		else {
+			return this->left->contains(content);
+		}
+	}
+	else {
+		if (this->right == nullptr) {
+			return false;
+		}
+		else {
+			return this->right->contains(content);
+		}
+	}
+}
+
 void Node::dump() {
 	if (this->left != nullptr) {
 		this->left->dump();
@@ -104,7 +126,7 @@ void Node::prettyDump(int height) {
 		std::cout << "|  ";
 	}
 	// std::cout << this->content << std::endl;
-	std::cout << this->content << "(" << this->heightBalance << ")" << std::endl;
+	std::cout << this->content << "(" << this->height << ")" << std::endl;
 
 	if (this->left != nullptr) {
 		this->left->prettyDump(height + 1);
@@ -129,6 +151,24 @@ void Tree::add_node(long content) {
 			this->head->add_right(content);
 		} 
 	}
+}
+
+bool Tree::contains(long content) {
+	if (this->head == nullptr) {
+		return false;
+	}
+	else {
+		if (content == this->head->content) {
+			return true;
+		}
+		else if (content < this->head->content) {
+			return this->head->left->contains(content);
+		}
+		else if (content > this->head->content) {
+			return this->head->right->contains(content);
+		}
+	}
+	return false;
 }
 
 void Tree::dump() {

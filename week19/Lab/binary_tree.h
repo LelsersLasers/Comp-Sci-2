@@ -29,6 +29,9 @@ class Node {
         // Constructor with content and parent.
         Node(long content, Node* parent);
 
+        // returns true if the tree contains the content (recursive)
+        bool contains(long content);
+
         // dump in order
         void dump();
         // prints the content of the node and its children in a tree-like format
@@ -52,6 +55,9 @@ class Tree {
             left has content smaller than this content, everything to the 
             right has larger content.  Silently ignore duplicated content. */
         void add_node(long content);
+
+        // returns true if the tree contains the content
+        bool contains(long content);
 
         // dump in order
         void dump();
