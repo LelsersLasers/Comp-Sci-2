@@ -39,6 +39,9 @@ class Node {
         // delete a node with the given content (silently ignore if not found)
         void delete_node(long content);
 
+        // recusively subtracts 1 from the height of the node and its children
+        void shiftUp();
+
         // dump in order
         void dump();
         // prints the content of the node and its children in a tree-like format

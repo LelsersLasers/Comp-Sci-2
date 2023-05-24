@@ -135,24 +135,26 @@ void Node::delete_node(long content) {
 		else if (this->right == nullptr) { // left is not nullptr
 			if (this->parent->left == this) {
 				this->parent->left = this->left;
+				this->parent->left->shiftUp();
 			}
 			else if (this->parent->right == this) {
 				this->parent->right = this->left;
+				this->parent->right->shiftUp();
 			}
 			delete this;
 		}
 		else if (this->left == nullptr) { // right is not nullptr
-			std::cout << "right is not nullptr " << this->content << std::endl; 
 			if (this->parent->left == this) {
-				std::cout << "parent left is " << this->parent->left->content << std::endl;
 				this->parent->left = this->right;
+				this->parent->left->shiftUp();
 			}
 			else if (this->parent->right == this) {
 				this->parent->right = this->right;
+				this->parent->right->shiftUp();
 			}
 			delete this;
 		}
-		else if (this->left != nullptr && this->right != nullptr) {
+		else { // both left and right are not nullptr
 			Node* current = this->right;
 			while (current->left != nullptr) {
 				current = current->left;
@@ -170,6 +172,16 @@ void Node::delete_node(long content) {
 		if (this->right != nullptr) {
 			this->right->delete_node(content);
 		}
+	}
+}
+
+void Node::shiftUp() {
+	this->height--;
+	if (this->left != nullptr) {
+		this->left->shiftUp();
+	}
+	if (this->right != nullptr) {
+		this->right->shiftUp();
 	}
 }
 
@@ -257,12 +269,16 @@ void Tree::delete_node(long content) {
 			this->head = this->head->right;
 			this->head->parent = nullptr;
 			delete temp;
+
+			this->head->shiftUp();
 		}
 		else if (this->head->right == nullptr) { // left is not nullptr
 			Node* temp = this->head;
 			this->head = this->head->left;
 			this->head->parent = nullptr;
 			delete temp;
+
+			this->head->shiftUp();
 		}
 		else { // both are not nullptr
 			Node* temp = this->head->right; // choose right to be moved up
@@ -272,6 +288,8 @@ void Tree::delete_node(long content) {
 			this->head->content = temp->content;
 			temp->parent->left = nullptr;
 			delete temp;
+
+			this->head->shiftUp();
 		}
 	}
 	else if (content < this->head->content) {
