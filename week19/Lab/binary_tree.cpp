@@ -37,6 +37,8 @@ Node::Node(long content, Node* parent) {
 }
 
 void Node::deconstructorRecursive() {
+	// I don't actually know if this works the way I think it does
+
 	if (this->left != nullptr) {
 		this->left->deconstructorRecursive();
 	}
@@ -44,6 +46,7 @@ void Node::deconstructorRecursive() {
 		this->right->deconstructorRecursive();
 	}
 
+	// do after children are deleted
 	delete this;
 }
 
