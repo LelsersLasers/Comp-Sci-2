@@ -24,6 +24,7 @@ class Node {
 
         // Default constructor, assigns 0 as its content.
         Node();
+        // Deconstructor, recursively deconstructs all children.
         void deconstructorRecursive();
         // Constructor with content.
         Node(long content);
@@ -44,7 +45,8 @@ class Node {
 
         // dump in order
         void dump();
-        // prints the content of the node and its children in a tree-like format
+        /* prints the content of the node and its children in a tree-like format
+            with the parent on the left and it's childern on the right */
         void prettyDump(int height);
     private:
         /* Methods to add a child node directly to this node.  Intended to 
@@ -61,6 +63,7 @@ class Tree {
         Node* head;
         // Default constructor.  Assigns head to be a null pointer.
         Tree();
+        // Deconstructor, recursively deconstructs all children using Node::deconstructorRecursive()
         ~Tree();
         /* Add content in the appropriate location, where every Node to its
             left has content smaller than this content, everything to the 
@@ -75,6 +78,8 @@ class Tree {
 
         // dump in order
         void dump();
-        // prints the content of the node and its children in a tree-like format
+        /* prints the content of the node and its children in a tree-like format
+            with the head on the left and childern on the right
+            Does not need queue because it goes left to right */
         void prettyDump();
 };

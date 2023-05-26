@@ -50,21 +50,6 @@ void Node::deconstructorRecursive() {
 void Node::add_left(long content) {
 	if (this->left == nullptr) {
 		this->left = new Node(content, this);
-
-
-		Node* currentParent = this;
-		while (currentParent != nullptr) {
-
-			currentParent->heightBalance--;
-
-			if (currentParent->heightBalance == 0) {
-				break;
-			}
-
-			currentParent = currentParent->parent;
-		}
-
-
 	} else if (content < this->left->content) {
 		this->left->add_left(content);
 	} else if (content > this->left->content) {
@@ -75,19 +60,6 @@ void Node::add_left(long content) {
 void Node::add_right(long content) {
 	if (this->right == nullptr) {
 		this->right = new Node(content, this);
-
-		Node* currentParent = this;
-		while (currentParent != nullptr) {
-
-			currentParent->heightBalance++;
-
-			if (currentParent->heightBalance == 0) {
-				break;
-			}
-
-			currentParent = currentParent->parent;
-		}
-
 	} else if (content < this->right->content) {
 		this->right->add_left(content);
 	} else if (content > this->right->content) {
@@ -204,8 +176,14 @@ void Node::prettyDump(int height) {
 	for (int i = 0; i < height; i++) {
 		std::cout << "|  ";
 	}
-	// std::cout << this->content << std::endl;
-	std::cout << this->content << "(" << this->height << ")" << std::endl;
+	
+	// Uses spaces to line things up, so padding is needed
+	// Assumes that the content will never be more than 3 digits
+	std::string contentPadded = std::to_string(this->content);
+	while (contentPadded.length() < 3) {
+		contentPadded += " ";
+	}
+	std::cout << contentPadded << std::endl;
 
 	if (this->left != nullptr) {
 		this->left->prettyDump(height + 1);
