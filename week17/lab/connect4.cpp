@@ -12,6 +12,7 @@
 #include <tuple>    // return more than 2 things from function
 #include <utility>  // pair - return 2 things from function
 #include <string>   // only used when reading from file
+#include <time.h>   // used to seed random
 
 using namespace std;
 //----------------------------------------------------------------------------//
@@ -98,8 +99,9 @@ int minimax(Board *board, int depth, int a, int b, bool isMaximizing);
 //----------------------------------------------------------------------------//
 
 void clearScreen() {
+  // "cls" is specific to windows
   // "clear" is specific to linux/mac
-  system("clear");
+  system("cls");
 }
 
 int max(int a, int b) {
